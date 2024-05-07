@@ -1,0 +1,14 @@
+CC = gcc
+TARGET = main
+NAME = TARGET
+
+CFLAGS = -Wall -Wpedantic -Wconversion -fsanitize=undefined 
+STDCPP = -std=c++20 
+all: 
+	${CC} ${CFLAGS} -o ${NAME} ${TARGET}.o ${STDCPP}
+
+${TARGET}.o: -c ${TARGET}.cpp entitymanager.o componentstorage.o
+
+entitymanager.o: -c entitymanager.hpp
+
+componentstorage.o: -c componentstorage.hpp 
