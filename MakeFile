@@ -43,7 +43,14 @@ SUBDIRS :=$(shell find . -type d -not -path "*.[a-z]*"  -not -path "*include*")
 #all objects from compilation are saved at this path(copy the project folder structure)
 OBJSUBDIRS :=$(patsubst %.c*,$(ODIR)/%.o,$(SUBDIRS))#$(OBJ)/$(SUBDIRS)
 
-ALLOBJSUBDIRS :=$(foreach objsubdir,$(OBJSUBDIRS),$(shell mkdir -p "$(objsubdir)"))
+ALLOBJSUBDIRS :=""#$(foreach objsubdir,$(OBJSUBDIRS),$(shell mkdir -p "$(objsubdir)"))
+
+
+# Create a variable 'TMP_OBJSUBDIRS' without spaces
+TMP_OBJSUBDIRS := $(patsubst %.c*, $(ODIR)/%.o, $(SUBDIRS))
+
+
+
 
 
 
@@ -55,6 +62,9 @@ ALLOBJSUBDIRS :=$(foreach objsubdir,$(OBJSUBDIRS),$(shell mkdir -p "$(objsubdir)
 $(APP): $(ALLOBJSUBDIRS) $(ALLCPPOBJS) $(ALLCOBJS)
 
 
+# Use TMP_OBJSUBDIRS in the rule to create directories
+$(ALLOBJSUBDIRS):
+  mkdir -p $(TMP_OBJSUBDIRS)
 
 
 
