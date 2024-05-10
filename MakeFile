@@ -43,7 +43,11 @@ SUBDIRS :=$(shell find . -type d -not -path "*.[a-z]*"  -not -path "*include*")
 #all objects from compilation are saved at this path(copy the project folder structure)
 OBJSUBDIRS :=$(patsubst %.c*,$(ODIR)/%.o,$(SUBDIRS))#$(OBJ)/$(SUBDIRS)
 
-ALLOBJSUBDIRS :=$(foreach objsubdir,$(OBJSUBDIRS),$(MKDIR))
+ALLOBJSUBDIRS :=$(foreach objsubdir,$(OBJSUBDIRS),$(shell mkdir -p "$(objsubdir)"))
+
+
+
+
 
 
 .PHONY: dir
