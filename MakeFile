@@ -11,9 +11,9 @@ CCFLAGS :=$(CCSTD) -Wall -Wpedantic -Wconversion -fsanitize=undefined
 
 #LIBS PATHS
 #siexgran engine path
-ECSENGINE_LIBS_PATH := -Idir "./siexgran engine/"
+ECSENGINE_LIBS_PATH := -I dir "./siexgran engine/"
 #opengl render engine path
-MYOPGL_LIBS_PATH := -Idir "./OpenGl/OpenGL3D/include/" -Idir "./OpenGL/OpenGL3D/source/"
+MYOPGL_LIBS_PATH := -I dir "./OpenGl/OpenGL3D/include/" -I dir "./OpenGL/OpenGL3D/source/"
 
 
 #SHELL SCRIPTING
