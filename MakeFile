@@ -1,0 +1,66 @@
+#MakeFile for Siexgran's Project
+#output file's name
+APP := game
+#Compilers variable
+CC := g++
+C := gcc
+#C++ standard variable
+CCSTD := -std=c++20 
+#C++ flags variable
+CCFLAGS :=$(CCSTD) -Wall -Wpedantic -Wconversion -fsanitize=undefined 
+
+#LIBS PATHS
+#siexgran engine path
+ECSENGINE_LIBS_PATH := -Idir "./siexgran engine/"
+#opengl render engine path
+MYOPGL_LIBS_PATH := -Idir "./OpenGl/OpenGL3D/include/" -Idir "./OpenGL/OpenGL3D/source/"
+
+
+#SHELL SCRIPTING
+#some scripts useful
+
+#Mkdir script
+MKDIR :=$(shell mkdir -p "$(dirname)")
+#src and obj variables
+SRC := src
+ODIR :=./obj
+#path for every cpp and c file
+ALLCPPS :=$(shell find . -iname *.cpp)
+ALLCS :=$(shell find . -iname *.c)
+#path for every o file 
+CPPOBJS :=$(OBJ)/$(patsubst %.cpp,%.o, $(ALLCPPS)%)
+COBJS :=$(OBJ)/$(patsubst %.c, %.o, $(ALLCS))
+#take an input and compile it
+MAKECPPOBJS :=$($(CC) -o $(cpp_obj) -c $(patsubst .o%,.cpp%,$(cpp_obj)) $(CCFLAGS))
+MAKECOBJS :=$($(C) -o $(c_obj) -c $(patsubst .o%,.c%,$(c_obj)) $(CFLAGS))
+#Makes a rule for each c or cpp file to compile all
+ALLCPPOBJS =$(foreach cppobj,$(CPPOBJS),$(MAKECPPOBJS))
+
+ALLCOBJS =$(foreach cobj,$(COBJS) ,$(MAKECOBJS))
+
+#find all subdirs at project directory
+SUBDIRS :=$(shell find . -type d -not -path "*.[a-z]*"  -not -path "*include*")
+#all objects from compilation are saved at this path(copy the project folder structure)
+OBJSUBDIRS :=$(patsubst %.c*,$(ODIR)/%.o,$(SUBDIRS))#$(OBJ)/$(SUBDIRS)
+
+ALLOBJSUBDIRS :=$(foreach objsubdir,$(OBJSUBDIRS),$(MKDIR))
+
+
+.PHONY: dir
+
+$(APP): $(ALLOBJSUBDIRS) $(ALLCPPOBJS) $(ALLCOBJS)
+
+
+
+
+
+
+#dir's rule show us information to creating the makefile
+dir:
+	$(info $(SUBDIRS))
+	$(info $(OBJSUBDIRS))
+	$(info $(ALLCPPOBJS))
+	$(info $(ALLOBJSUBDIRS))
+clear: 
+	rmdir ./obj
+
