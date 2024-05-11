@@ -1,1 +1,5 @@
+struct OGraphicsEngine {
+	OGraphicsEngine();
+	~OGraphicsEngine();
+};
 
