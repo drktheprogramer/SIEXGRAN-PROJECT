@@ -11,7 +11,11 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
         case WM_DESTROY:
         {
             OWindow* window=(OWindow*)GetWindowLongPtr(hwnd,GWLP_USERDATA);
-            window->onDestroy();
+            break;
+        }
+        case WM_QUIT:
+        {
+            PostQuitMessage(0);
             break;
         }
 
