@@ -11,9 +11,9 @@ CCFLAGS :=$(CCSTD) -Wall -Wpedantic -Wconversion -fsanitize=undefined
 
 #LIBS PATHS
 #siexgran engine path
-ECSENGINE_LIBS_PATH := -Idir "./siexgran engine/"
+ECSENGINE_LIBS_PATH := -I dir "./siexgran engine/"
 #opengl render engine path
-MYOPGL_LIBS_PATH := -Idir "./OpenGl/OpenGL3D/include/" -Idir "./OpenGL/OpenGL3D/source/"
+MYOPGL_LIBS_PATH := -I dir "./OpenGl/OpenGL3D/include/" -I dir "./OpenGL/OpenGL3D/source/"
 
 
 #SHELL SCRIPTING
@@ -43,14 +43,33 @@ SUBDIRS :=$(shell find . -type d -not -path "*.[a-z]*"  -not -path "*include*")
 #all objects from compilation are saved at this path(copy the project folder structure)
 OBJSUBDIRS :=$(patsubst %.c*,$(ODIR)/%.o,$(SUBDIRS))#$(OBJ)/$(SUBDIRS)
 
+<<<<<<< HEAD
 ALLOBJSUBDIRS :=$(foreach objsubdir,$(OBJSUBDIRS),$(MKDIR) $(wildcard "$(objsubdir)"))
 #ALLOBJSUBDIRS :=$(for objsubdir in $(OBJSUBDIRS); do echo $(objsubdir) done)
+=======
+ALLOBJSUBDIRS :=""#$(foreach objsubdir,$(OBJSUBDIRS),$(shell mkdir -p "$(objsubdir)"))
+
+
+# Create a variable 'TMP_OBJSUBDIRS' without spaces
+TMP_OBJSUBDIRS := $(patsubst %.c*, $(ODIR)/%.o, $(SUBDIRS))
+
+
+
+
+
+
+
+
+>>>>>>> 422ea86f624ac448e6e89f46f5b2f95c328ed8eb
 
 .PHONY: dir
 
 $(APP): $(ALLOBJSUBDIRS) $(ALLCPPOBJS) $(ALLCOBJS)
 
 
+# Use TMP_OBJSUBDIRS in the rule to create directories
+$(ALLOBJSUBDIRS):
+  mkdir -p $(TMP_OBJSUBDIRS)
 
 
 
