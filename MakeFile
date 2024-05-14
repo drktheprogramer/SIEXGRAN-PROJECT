@@ -43,10 +43,10 @@ SUBDIRS :=$(shell find . -type d -not -path "*.[a-z]*"  -not -path "*include*")
 #all objects from compilation are saved at this path(copy the project folder structure)
 OBJSUBDIRS :=$(patsubst %.c*,$(ODIR)/%.o,$(SUBDIRS))#$(OBJ)/$(SUBDIRS)
 
-<<<<<<< HEAD
-ALLOBJSUBDIRS :=$(foreach objsubdir,$(OBJSUBDIRS),$(MKDIR) $(wildcard "$(objsubdir)"))
+
+#ALLOBJSUBDIRS :=$(foreach objsubdir,$(OBJSUBDIRS),$(MKDIR) $(wildcard "$(objsubdir)"))
 #ALLOBJSUBDIRS :=$(for objsubdir in $(OBJSUBDIRS); do echo $(objsubdir) done)
-=======
+
 ALLOBJSUBDIRS :=""#$(foreach objsubdir,$(OBJSUBDIRS),$(shell mkdir -p "$(objsubdir)"))
 
 
@@ -60,7 +60,7 @@ TMP_OBJSUBDIRS := $(patsubst %.c*, $(ODIR)/%.o, $(SUBDIRS))
 
 
 
->>>>>>> 422ea86f624ac448e6e89f46f5b2f95c328ed8eb
+
 
 .PHONY: dir
 
