@@ -9,7 +9,7 @@
 #
 #	>>	OUTPUT'S FILES
 APP := game
-#	>>	compilers variables
+#	>>	COMPLILERS VARIABLES 
 CC := g++
 C := gcc
 #	>>	STANDARD VARIABLES 
