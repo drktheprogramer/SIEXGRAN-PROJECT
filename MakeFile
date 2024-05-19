@@ -38,7 +38,9 @@ LIBS :=
 #---------------------------------------#
 #
 SRC := ./src/
-ODIR := ./obj/
+BIN := BIN
+ODIR := ./$(BIN)/obj/
+DDIR := ./$(BIN)/dep/
 
 #		  [ALL CPP AND C FILES]
 #---------------------------------------#
@@ -72,11 +74,12 @@ $(2): $(3) $(4)
 $(1) -c -o $(2) $(3) $(5)
 endef 
 #
-#	>	GETOBJPATHS MACRO	<
-#	$(1): Source// file
+#	>	SETPATHS MACRO	<
+#	$(1): New path
+#	$(2): Source file
 #
-define GETOBJPATH
-$(subst ./,$(ODIR),$(patsubst %.c,%.o,$(patsubst %.cpp,%.o,$(1))))
+define SETPATH
+$(subst ./,$(1),$(patsubst %.c,%.o,$(patsubst %.cpp,%.o,$(2))))
 endef
 
 #MAKECPPOBJS =$($(CC) -o $(subst ./,$(ODIR),$(patsubst %.cpp,%.o,$(input))) -c $(input) $(CCFLAGS) $(PROJECT_LIBS) )
@@ -88,9 +91,9 @@ endef
 #FOREACH_COBJS :=$(foreach cobj,$(ALLCS) ,$(eval $(call $(MAKECPPOBJS) $(cobj))))
 
 #
-FOREACH_CPPOBJS :=$(foreach cppobj,$(ALLCPPS),$(eval $(call $(MAKEOBJS),$(CC),$(call $(GETOBJPATH),$(cppobj)),$(cppobj),,$(CCFLAGS))))
+FOREACH_CPPOBJS :=$(foreach cppobj,$(ALLCPPS),$(eval $(call $(MAKEOBJS),$(CC),$(call $(SETPATH),$(ODIR),$(cppobj)),$(cppobj),,$(CCFLAGS))))
 #
-FOREACH_COBJS :=$(foreach cobj,$(ALLCS),$(eval $(call $(MAKEOBJS),$(C),$(call $(GETOBJPATH),$(cobj)),$(cobj),,$(CFLAGS))))
+FOREACH_COBJS :=$(foreach cobj,$(ALLCS),$(eval $(call $(MAKEOBJS),$(C),$(call $(SETPATH),$(ODIR),$(cobj)),$(cobj),,$(CFLAGS))))
 
 #				 [RULES]
 #---------------------------------------#
