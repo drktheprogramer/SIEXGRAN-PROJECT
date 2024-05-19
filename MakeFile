@@ -62,7 +62,7 @@ MAKECPPOBJS =$($(CC) -o $(subst ./,$(ODIR),$(patsubst %.cpp,%.o,$(input))) -c $(
 MAKECOBJS =$($(C) -o $(subst ./,$(ODIR),$(patsubst %.c,%.o,$(input))) -c $(input) $(CFLAGS) $(PROJECT_LIBS))
 #	>> RULE'S GENERATOR FOR COMPILE MULTIPLE FILES
 FOREACH_CPPOBJS :=$(foreach cppobj,$(ALLCPPS),$(eval $(call $(MAKECPPOBJS) $(cppobj))))
-FOREACH_COBJS :=$(foreach cobj,$(ALLCS) ,$(eval $(call $(MAKECPPOBJS) $(cppobj))))
+FOREACH_COBJS :=$(foreach cobj,$(ALLCS) ,$(eval $(call $(MAKECPPOBJS) $(cobj))))
 
 #				 [RULES]
 #---------------------------------------#
