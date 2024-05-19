@@ -119,9 +119,11 @@ $(PATHCOBJS): $(ALLCS)
 	mkdir -p $(@D)
 	$(FOREACH_COBJS)
 
+#	>> REMAKE RULE
+remake: clean $(APP)
 
-#	>>	CLEAR RULE
-clear:
+#	>>	CLEAN RULE
+clean:
 	rm -r $(ODIR)
 
 show_info:
