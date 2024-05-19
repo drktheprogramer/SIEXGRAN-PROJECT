@@ -60,20 +60,20 @@ PATHCOBJS :=$(subst ./,$(ODIR),$(COBJS))
 #---------------------------------------#
 #
 #
-#	>MAKEOBJS MACRO<
-#$(1): Compiler 
-#$(2): Output file
-#$(3): Source files
-#$(4): Another dependencies
-#$(5): Flags
+#	>	MAKEOBJS MACRO	<
+#	$(1): Compiler 
+#	$(2): Output file
+#	$(3): Source files
+#	$(4): Another dependencies
+#	$(5): Flags
 #
 define MAKEOBJS
 $(2): $(3) $(4)
 $(1) -c -o $(2) $(3) $(5)
 endef 
 #
-#	>GETOBJPATHS MACRO<
-#$(1): Source// file
+#	>	GETOBJPATHS MACRO	<
+#	$(1): Source// file
 #
 define GETOBJPATH
 $(subst ./,$(ODIR),$(patsubst %.c,%.o,$(patsubst %.cpp,%.o,$(1))))
