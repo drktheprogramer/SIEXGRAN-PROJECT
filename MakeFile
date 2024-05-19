@@ -7,17 +7,17 @@
 #			[CONFIGURATION]
 #---------------------------------------#
 #
-#	>>	output file's name
+#	>>	OUTPUT'S FILES
 APP := game
 #	>>	compilers variables
 CC := g++
 C := gcc
-#	>>	standard variables
+#	>>	STANDARD VARIABLES 
 CCSTD := -std=c++20 
 CSTD := -std=c17
-#	>>	flags variables
-CCFLAGS :=$(CCSTD) -Wall -Wpedantic -Wconversion -fsanitize=undefined 
-CFLAGS :=$(CSTD) -Wall -Wpedantic -Wconversion -fsanitize=undefined 
+#	>>	FLAGS VARIABLES 
+CCFLAGS :=$(CCSTD) $(PROJECT_LIBS) -Wall -Wpedantic -Wconversion -fsanitize=undefined 
+CFLAGS :=$(CSTD) $(PROJECT_LIBS) -Wall -Wpedantic -Wconversion -fsanitize=undefined 
 
 #			  [LIBS PATHS]
 #---------------------------------------#
@@ -29,7 +29,9 @@ ECSENGINE_LIBS_PATH := -I dir "./siexgran engine"
 #	>>	OPENGL RENDER ENGINE PATH
 MYOPGL_LIBS_PATH := -I dir "./OpenGl/OpenGL3D/include" -I dir "./OpenGL/OpenGL3D/source"
 #	>>	VENDORS PATH
-VENDORS_LIBS_PATH := -I dir "./vendors"
+VENDORS_LIBS_PATH := -I dir "./vendors
+#	>> THIRD PARTY'S LIBS PATH
+LIBS :=
 
 
 #				[PREFIX]
@@ -103,7 +105,8 @@ FOREACH_COBJS :=$(foreach cobj,$(ALLCS),$(eval $(call $(MAKEOBJS),$(C),$(call $(
 
 
 #	>>	MAIN RULE
-$(APP):$(PATHCPPOBJS) $(PATHCOBJS)
+$(APP): $(PATHCPPOBJS) $(PATHCOBJS)
+	$(CC) -o $@.exe $^ $(LIBS)
 
 #	>>	CPP HELPER RULE
 $(PATHCPPOBJS): $(ALLCPPS)
