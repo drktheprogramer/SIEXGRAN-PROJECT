@@ -1,3 +1,4 @@
-'siexgran engine'/.vscode/c_cpp_properties.json
-'siexgran engine'/.vscode/settings.json
-'siexgran engine'/.vscode
+**/.vscode/*
+**/.obj/*
+**/.dep/*
+**/.exe/*
