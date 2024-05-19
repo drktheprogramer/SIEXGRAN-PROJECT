@@ -41,6 +41,7 @@ SRC := ./src/
 BIN := BIN
 ODIR := ./$(BIN)/obj/
 DDIR := ./$(BIN)/dep/
+EXEDIR := ./$(BIN)/exe/
 
 #		  [ALL CPP AND C FILES]
 #---------------------------------------#
@@ -109,7 +110,7 @@ FOREACH_COBJS :=$(foreach cobj,$(ALLCS),$(eval $(call $(MAKEOBJS),$(C),$(call $(
 
 #	>>	MAIN RULE
 $(APP): $(PATHCPPOBJS) $(PATHCOBJS)
-	$(CC) -o $@.exe $^ $(LIBS)
+	$(CC) -o $@ $^ $(LIBS)
 
 #	>>	CPP HELPER RULE
 $(PATHCPPOBJS): $(ALLCPPS)
