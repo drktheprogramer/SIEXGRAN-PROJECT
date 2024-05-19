@@ -1,85 +1,106 @@
-#MakeFile for Siexgran's Project
-#output file's name
+#	[MakeFile for Siexgran's Project]
+#---------------------------------------#
+#	
+#
+#
+
+#			[CONFIGURATION]
+#---------------------------------------#
+#
+#	>>	output file's name
 APP := game
-#Compilers variable
+#	>>	compilers variables
 CC := g++
 C := gcc
-#C++ standard variable
+#	>>	standard variables
 CCSTD := -std=c++20 
-#C++ flags variable
+CSTD := -std=c17
+#	>>	flags variables
 CCFLAGS :=$(CCSTD) -Wall -Wpedantic -Wconversion -fsanitize=undefined 
+CFLAGS :=$(CSTD) -Wall -Wpedantic -Wconversion -fsanitize=undefined 
 
-#LIBS PATHS
-#siexgran engine path
-ECSENGINE_LIBS_PATH := -I dir "./siexgran engine/"
-#opengl render engine path
-MYOPGL_LIBS_PATH := -I dir "./OpenGl/OpenGL3D/include/" -I dir "./OpenGL/OpenGL3D/source/"
-
-
-#SHELL SCRIPTING
-#some scripts useful
-
-#Mkdir script
-MKDIR :=$(shell mkdir -p "$(dirname)")
-#src and obj variables
-SRC := src
-ODIR :=./obj
-#path for every cpp and c file
-ALLCPPS :=$(shell find . -iname *.cpp)
-ALLCS :=$(shell find . -iname *.c)
-#path for every o file 
-CPPOBJS :=$(OBJ)/$(patsubst %.cpp,%.o, $(ALLCPPS)%)
-COBJS :=$(OBJ)/$(patsubst %.c, %.o, $(ALLCS))
-#take an input and compile it
-MAKECPPOBJS :=$($(CC) -o $(cpp_obj) -c $(patsubst .o%,.cpp%,$(cpp_obj)) $(CCFLAGS))
-MAKECOBJS :=$($(C) -o $(c_obj) -c $(patsubst .o%,.c%,$(c_obj)) $(CFLAGS))
-#Makes a rule for each c or cpp file to compile all
-ALLCPPOBJS =$(foreach cppobj,$(CPPOBJS),$(MAKECPPOBJS))
-
-ALLCOBJS =$(foreach cobj,$(COBJS) ,$(MAKECOBJS))
-
-#find all subdirs at project directory
-SUBDIRS :=$(shell find . -type d -not -path "*.[a-z]*"  -not -path "*include*")
-#all objects from compilation are saved at this path(copy the project folder structure)
-OBJSUBDIRS :=$(patsubst %.c*,$(ODIR)/%.o,$(SUBDIRS))#$(OBJ)/$(SUBDIRS)
+#			  [LIBS PATHS]
+#---------------------------------------#
+#	
+#	>>	MAIN PROJECT LIBS
+PROJECT_LIBS=$(ECSENGINE_LIBS_PATH) $(MYOPGL_LIBS_PATH) $(VENDORS_LIBS_PATH)
+#	>>	SIEXGRAN ENGINE PATH
+ECSENGINE_LIBS_PATH := -I dir "./siexgran engine"
+#	>>	OPENGL RENDER ENGINE PATH
+MYOPGL_LIBS_PATH := -I dir "./OpenGl/OpenGL3D/include" -I dir "./OpenGL/OpenGL3D/source"
+#	>>	VENDORS PATH
+VENDORS_LIBS_PATH := -I dir "./vendors"
 
 
-#ALLOBJSUBDIRS :=$(foreach objsubdir,$(OBJSUBDIRS),$(MKDIR) $(wildcard "$(objsubdir)"))
-#ALLOBJSUBDIRS :=$(for objsubdir in $(OBJSUBDIRS); do echo $(objsubdir) done)
+#				[PREFIX]
+#---------------------------------------#
+#
+SRC := ./src/
+ODIR := ./obj/
 
-ALLOBJSUBDIRS :=""#$(foreach objsubdir,$(OBJSUBDIRS),$(shell mkdir -p "$(objsubdir)"))
+#		  [ALL CPP AND C FILES]
+#---------------------------------------#
+#
+ALLCPPS :=$(shell find ./ -iname *.cpp)
+ALLCS :=$(shell find ./ -iname *.c)
 
+#	  [PATHS FOR EVERY CPP OR C OBJ]
+#---------------------------------------#
+#	
+#	>>	AUXILIAR VARIABLES FOR READIBILITY
+CPPOBJS :=$(patsubst %.cpp,%.o, $(ALLCPPS))
+COBJS :=$(patsubst %.c,%.o, $(ALLCS))
+#	>>	PATHS' VARIABLES
+PATHCPPOBJS :=$(subst ./,$(ODIR),$(CPPOBJS))
+PATHCOBJS :=$(subst ./,$(ODIR),$(COBJS))
 
-# Create a variable 'TMP_OBJSUBDIRS' without spaces
-TMP_OBJSUBDIRS := $(patsubst %.c*, $(ODIR)/%.o, $(SUBDIRS))
+#	    [VAR-FUNCTIONS TO COMPILE]
+#---------------------------------------#
+#
+#	>> RULE FOR COMPILE EVERY FILE ONCE AT TIME	
+MAKECPPOBJS =$($(CC) -o $(subst ./,$(ODIR),$(patsubst %.cpp,%.o,$(input))) -c $(input) $(CCFLAGS) $(PROJECT_LIBS) )
+MAKECOBJS =$($(C) -o $(subst ./,$(ODIR),$(patsubst %.c,%.o,$(input))) -c $(input) $(CFLAGS) $(PROJECT_LIBS))
+#	>> RULE'S GENERATOR FOR COMPILE MULTIPLE FILES
+FOREACH_CPPOBJS :=$(foreach cppobj,$(ALLCPPS),$(eval $(call $(MAKECPPOBJS) $(cppobj))))
+FOREACH_COBJS :=$(foreach cobj,$(ALLCS) ,$(eval $(call $(MAKECPPOBJS) $(cppobj))))
 
-
-
-
-
-
-
-
-
-
-.PHONY: dir
-
-$(APP): $(ALLOBJSUBDIRS) $(ALLCPPOBJS) $(ALLCOBJS)
-
-
-# Use TMP_OBJSUBDIRS in the rule to create directories
-$(ALLOBJSUBDIRS):
-  mkdir -p $(TMP_OBJSUBDIRS)
+#				 [RULES]
+#---------------------------------------#
+#
+#	>>	PHONY RULES
+.PHONY: show_info clear
 
 
 
 
-#dir's rule show us information to creating the makefile
-dir:
-	$(info $(SUBDIRS))
-	$(info $(OBJSUBDIRS))
-	$(info $(ALLCPPOBJS))
-	$(info $(ALLOBJSUBDIRS))
-clear: 
-	rmdir ./obj
+
+
+
+#	>>	MAIN RULE
+$(APP):$(PATHCPPOBJS) $(PATHCOBJS)
+
+#	>>	CPP HELPER RULE
+$(PATHCPPOBJS): $(ALLCPPS)
+	mkdir -p $(@D)
+	$(FOREACH_CPPOBJS)
+
+
+#	>>	C HELPER RULE
+$(PATHCOBJS): $(ALLCS)
+	mkdir -p $(@D)
+	$(FOREACH_COBJS)
+
+
+#	>>	CLEAR RULE
+clear:
+	rm -r $(ODIR)
+
+show_info:
+	$(info $(PATHCPPOBJS))
+	$(info $(PATHCOBJS))
+	$(info $(ALLCPPS))
+	$(info $(ALLCS))
+
+
+
 
