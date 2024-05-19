@@ -57,12 +57,38 @@ PATHCOBJS :=$(subst ./,$(ODIR),$(COBJS))
 #	    [VAR-FUNCTIONS TO COMPILE]
 #---------------------------------------#
 #
-#	>> RULE FOR COMPILE EVERY FILE ONCE AT TIME	
-MAKECPPOBJS =$($(CC) -o $(subst ./,$(ODIR),$(patsubst %.cpp,%.o,$(input))) -c $(input) $(CCFLAGS) $(PROJECT_LIBS) )
-MAKECOBJS =$($(C) -o $(subst ./,$(ODIR),$(patsubst %.c,%.o,$(input))) -c $(input) $(CFLAGS) $(PROJECT_LIBS))
-#	>> RULE'S GENERATOR FOR COMPILE MULTIPLE FILES
-FOREACH_CPPOBJS :=$(foreach cppobj,$(ALLCPPS),$(eval $(call $(MAKECPPOBJS) $(cppobj))))
-FOREACH_COBJS :=$(foreach cobj,$(ALLCS) ,$(eval $(call $(MAKECPPOBJS) $(cobj))))
+#
+#	>MAKEOBJS MACRO<
+#$(1): Compiler 
+#$(2): Output file
+#$(3): Source files
+#$(4): Another dependencies
+#$(5): Flags
+#
+define MAKEOBJS
+$(2): $(3) $(4)
+$(1) -c -o $(2) $(3) $(5)
+endef 
+#
+#	>GETOBJPATHS MACRO<
+#$(1): Source// file
+#
+define GETOBJPATH
+$(subst ./,$(ODIR),$(patsubst %.c,%.o,$(patsubst %.cpp,%.o,$(1))))
+endef
+
+#MAKECPPOBJS =$($(CC) -o $(subst ./,$(ODIR),$(patsubst %.cpp,%.o,$(input))) -c $(input) $(CCFLAGS) $(PROJECT_LIBS) )
+#MAKECOBJS =$($(C) -o $(subst ./,$(ODIR),$(patsubst %.c,%.o,$(input))) -c $(input) $(CFLAGS) $(PROJECT_LIBS))
+#
+#        >> RULE'S GENERATOR FOR COMPILE MULTIPLE FILES
+
+#FOREACH_CPPOBJS :=$(foreach cppobj,$(ALLCPPS),$(eval $(call $(MAKECPPOBJS) $(cppobj))))
+#FOREACH_COBJS :=$(foreach cobj,$(ALLCS) ,$(eval $(call $(MAKECPPOBJS) $(cobj))))
+
+#
+FOREACH_CPPOBJS :=$(foreach cppobj,$(ALLCPPS),$(eval $(call $(MAKEOBJS),$(CC),$(call $(GETOBJPATH),$(cppobj)),$(cppobj),,$(CCFLAGS))))
+#
+FOREACH_COBJS :=$(foreach cobj,$(ALLCS),$(eval $(call $(MAKEOBJS),$(C),$(call $(GETOBJPATH),$(cobj)),$(cobj),,$(CFLAGS))))
 
 #				 [RULES]
 #---------------------------------------#
