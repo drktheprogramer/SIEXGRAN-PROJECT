@@ -119,7 +119,7 @@ $(PATHCOBJS): $(ALLCS)
 	mkdir -p $(@D)
 	$(FOREACH_COBJS)
 
-#	>> REMAKE RULE
+#	>>	REMAKE RULE
 remake: clean $(APP)
 
 #	>>	CLEAN RULE
