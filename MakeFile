@@ -37,11 +37,11 @@ LIBS :=
 #				[PREFIX]
 #---------------------------------------#
 #
-SRC := ./src/
-BIN := BIN
-ODIR := ./$(BIN)/obj/
-DDIR := ./$(BIN)/dep/
-EXEDIR := ./$(BIN)/exe/
+BIN := ./BIN
+SRC := ./src
+ODIR := $(BIN)/obj/
+DDIR := $(BIN)/dep/
+EXEDIR := $(BIN)/exe/
 
 #		  [ALL CPP AND C FILES]
 #---------------------------------------#
