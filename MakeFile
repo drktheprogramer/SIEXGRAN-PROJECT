@@ -8,8 +8,9 @@
 #			[CONFIGURATION]
 #---------------------------------------#
 #
-#	>>	OUTPUT'S FILES
+#	>>	OUTPUT FILE
 APP := game
+EXTENSION := .exe
 #	>>	COMPLILERS VARIABLES 
 CC := g++
 C := gcc
@@ -40,9 +41,11 @@ LIBS :=
 #
 BIN := ./BIN
 SRC := ./src
-ODIR := $(BIN)/obj/
-DDIR := $(BIN)/dep/
-EXEDIR := $(BIN)/exe/
+BUILD := $(BIN)/realease
+ODIR := $(BUILD)/obj/
+DDIR := $(BUILD)/dep/
+EXEDIR := $(BUILD)/exe/
+
 
 #		  [ALL CPP AND C FILES]
 #---------------------------------------#
@@ -110,9 +113,24 @@ FOREACH_COBJS :=$(foreach cobj,$(ALLCS),$(eval $(call $(MAKEOBJS),$(C),$(call $(
 
 
 #	>>	MAIN RULE
-$(APP): $(PATHCPPOBJS) $(PATHCOBJS)
-	$(CC) -o $@ $^ $(LIBS)
+$(APP): executable
 
+#	>>	EXECUTABLE RULE
+executable: $(PATHCPPOBJS) $(PATHCOBJS)
+	$(CC) -o $(call $(SETPATH),$(EXEDIR),$(APP)$(EXTENSION) $^ $(LIBS)
+
+#	>>	DEBUG RULE
+debug: BUILD := $(BIN)/debug
+debug: CCFLAGS += -DDEBUG -g
+debug: CFLAGS += -DDEBUG -g
+debug: executable 
+
+#	>>	TEST RULE
+test: BUILD := $(BIN)/test
+test: executable 
+
+
+#	----------	HELPERS	----------	#
 #	>>	CPP HELPER RULE
 $(PATHCPPOBJS): $(ALLCPPS)
 	mkdir -p $(@D)
