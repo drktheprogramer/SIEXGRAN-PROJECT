@@ -11,6 +11,9 @@
 #	>>	OUTPUT FILE
 APP := game
 EXTENSION := .exe
+#	>>	DEFAULT RULE VARIABLE
+#	Stores the rule to set in 'remake' rule for debbugin, release or test build
+DEFAULT_RULE := $(APP)
 #	>>	COMPLILERS VARIABLES 
 CC := g++
 C := gcc
@@ -123,11 +126,20 @@ executable: $(PATHCPPOBJS) $(PATHCOBJS)
 debug: BUILD := $(BIN)/debug
 debug: CCFLAGS += -DDEBUG -g
 debug: CFLAGS += -DDEBUG -g
+debug: DEFAULT_RULE := debug
 debug: executable 
 
 #	>>	TEST RULE
 test: BUILD := $(BIN)/test
+test: DEFAULT_RULE:= test
 test: executable 
+
+#	>>	REMAKE RULE
+remake: clean $(DEFAULT_RULE)
+
+#	>>	CLEAN RULE
+clean:
+	rm -r $(ODIR)
 
 
 #	----------	HELPERS	----------	#
@@ -142,12 +154,6 @@ $(PATHCOBJS): $(ALLCS)
 	mkdir -p $(@D)
 	$(FOREACH_COBJS)
 
-#	>>	REMAKE RULE
-remake: clean $(APP)
-
-#	>>	CLEAN RULE
-clean:
-	rm -r $(ODIR)
 
 show_info:
 	$(info $(PATHCPPOBJS))
