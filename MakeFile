@@ -139,7 +139,8 @@ remake: clean $(DEFAULT_RULE)
 
 #	>>	CLEAN RULE
 clean:
-	rm -r $(ODIR)
+	rm -r $(BIN)
+
 
 
 #	----------	HELPERS	----------	#
