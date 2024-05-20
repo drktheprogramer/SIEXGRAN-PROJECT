@@ -59,7 +59,7 @@ ALLCS :=$(shell find ./ -iname *.c)
 #	  [PATHS FOR EVERY CPP OR C OBJ]
 #---------------------------------------#
 #	
-#	>>	AUXILIAR VARIABLES FOR READIBILITY
+#	>>	AUXILIAR VARIABLES FOR READABILITY
 CPPOBJS :=$(patsubst %.cpp,%.o, $(ALLCPPS))
 COBJS :=$(patsubst %.c,%.o, $(ALLCS))
 #	>>	PATHS' VARIABLES
