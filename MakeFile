@@ -13,6 +13,13 @@ MSG := echo Builded succesfuly!
 HEADERS :=$(shell find ./ -iname *.h* )
 DIRHEADERS :=$(subst engine,./siexgran engine,$(patsubst %,"%",$(patsubst /www%,,$(sort $(sort $(dir $(HEADERS)))))))
 PATH_HEADERS :=$(subst /",",$(subst "./,-I "$(PWD)/,$(DIRHEADERS)))
+COREHEADERS =: siexgran engine/componentstorage.hpp \
+siexgran engine/entitymanager.hpp \
+siexgran engine/utils/common_tags_cmps_traits.hpp \
+siexgran engine/utils/logic4ecs.hpp \
+siexgran engine/utils/showmem.hpp \
+siexgran engine/utils/slotmap.hpp \
+siexgran engine/utils/typetraits.hpp 
 PWD :=$(shell pwd)
 
 #									[CONFIGURATION]
