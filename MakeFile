@@ -1,19 +1,29 @@
-#	[MakeFile for Siexgran's Project]
-#---------------------------------------#
+#						  [MakeFile for Siexgran's Project]
+#--------------------------------------------------------------------------------------------#
 #	
 #
 #
+MSG := echo Builded succesfuly!
+#			  						[HEADERS PATHS]
+#--------------------------------------------------------------------------------------------#
+#	
+#	>>	MAIN PROJECT HEADERS
+#
+#	>>	HEADERS PATH
+HEADERS :=$(shell find ./ -iname *.h* )
+DIRHEADERS :=$(subst engine,./siexgran engine,$(patsubst %,"%",$(patsubst /www%,,$(sort $(sort $(dir $(HEADERS)))))))
+PATH_HEADERS :=$(subst /",",$(subst "./,-I "$(PWD)/,$(DIRHEADERS)))
+PWD :=$(shell pwd)
 
-
-#			[CONFIGURATION]
-#---------------------------------------#
+#									[CONFIGURATION]
+#--------------------------------------------------------------------------------------------#
 #
 #	>>	OUTPUT FILE
 APP := game
 EXTENSION := .exe
 #	>>	DEFAULT RULE VARIABLE
 #	Stores the rule to set in 'remake' rule for debbugin, release or test build
-DEFAULT_RULE := $(APP)
+VERSION := DEBUG 
 #	>>	COMPLILERS VARIABLES 
 CC := g++
 C := gcc
@@ -21,53 +31,79 @@ C := gcc
 CCSTD := -std=c++20 
 CSTD := -std=c17
 #	>>	FLAGS VARIABLES 
-CCFLAGS :=$(CCSTD) $(PROJECT_LIBS) -Wall -Wpedantic -Wconversion -fsanitize=undefined 
-CFLAGS :=$(CSTD) $(PROJECT_LIBS) -Wall -Wpedantic -Wconversion -fsanitize=undefined 
+CCFLAGS :=$(CCSTD) $(PATH_HEADERS) -Wall -Wpedantic -Wconversion #-fsanitize=undefined -O3
+CFLAGS :=$(CSTD) $(PATH_HEADERS) -Wall -Wpedantic -Wconversion  #-fsanitize=undefined -O3
 
-#			  [LIBS PATHS]
-#---------------------------------------#
-#	
-#	>>	MAIN PROJECT LIBS
-PROJECT_LIBS=$(ECSENGINE_LIBS_PATH) $(MYOPGL_LIBS_PATH) $(VENDORS_LIBS_PATH)
-#	>>	SIEXGRAN ENGINE PATH
-ECSENGINE_LIBS_PATH := -I dir "./siexgran engine"
-#	>>	OPENGL RENDER ENGINE PATH
-MYOPGL_LIBS_PATH := -I dir "./OpenGl/OpenGL3D/include" -I dir "./OpenGL/OpenGL3D/source"
-#	>>	VENDORS PATH
-VENDORS_LIBS_PATH := -I dir "./vendors
-#	>> THIRD PARTY'S LIBS PATH
-LIBS :=
-
-
-#				[PREFIX]
-#---------------------------------------#
 #
-BIN := ./BIN
+#
+LIBSPATH := -L/c/'Program Files (x86)'/'Windows Kits'/10/Lib/'10.0.19041.0'/um/x64
+LIBS := -lOpenGl32 -lGdi32
+
+
+# ---------------- | ------------- | --- | [VERSION] | --- | ------------- | --------------- # 
+ifdef RELEASE 	#	>>	RELEASE VERSION
+$(APP) += v$(RELEASE)
+VERSION := RELEASE
+EXEDIR := ./exe/
+CCFLAGS += -O3
+CFLAGS += -O3
+else
+ifdef TEST 		#	>>	TEST VERSION
+$(APP) += snapshot v$(TEST)
+VERSION:= TEST
+CCFLAGS += -O3
+CFLAGS += -O3
+else 			#	>>	DEFAULT VERSION
+$(APP) += _debug_version
+VERSION := DEBUG
+CCFLAGS += -DDEBUG -g
+CFLAGS += -DDEBUG -g
+BUILD := $(BIN)/$(VERSION)
+endif
+endif  
+
+
+#										[PREFIX]
+#--------------------------------------------------------------------------------------------#
+#
+BIN := ./.BIN
 SRC := ./src
-BUILD := $(BIN)/realease
-ODIR := $(BUILD)/obj/
-DDIR := $(BUILD)/dep/
-EXEDIR := $(BUILD)/exe/
+BUILD :=$(BIN)/$(VERSION)
+ODIR :=$(BUILD)/obj/
+DDIR :=$(BUILD)/dep/
+EXEDIR :=$(BUILD)/exe/
 
 
-#		  [ALL CPP AND C FILES]
-#---------------------------------------#
+#		  						  [ALL CPP AND C FILES]
+#--------------------------------------------------------------------------------------------#
 #
-ALLCPPS :=$(shell find ./ -iname *.cpp)
-ALLCS :=$(shell find ./ -iname *.c)
+ALLCPPS :=$(shell find ./ -iname *.cpp -not -iname *glx*)
+ALLCS :=$(shell find ./ -iname *.c -not -iname *glx*)
 
-#	  [PATHS FOR EVERY CPP OR C OBJ]
-#---------------------------------------#
+#	  						 [PATHS FOR EVERY CPP OR C OBJ]
+#--------------------------------------------------------------------------------------------#
 #	
+#								>	SETPATHS MACRO	<
+#	$(1): New patht
+#	$(2): Source file
+#
+define SETPATH
+$(subst ./,$(1),$(patsubst %.c,%.o,$(patsubst %.cpp,%.o,$(2))))
+endef
 #	>>	AUXILIAR VARIABLES FOR READABILITY
 CPPOBJS :=$(patsubst %.cpp,%.o, $(ALLCPPS))
 COBJS :=$(patsubst %.c,%.o, $(ALLCS))
 #	>>	PATHS' VARIABLES
-PATHCPPOBJS :=$(subst ./,$(ODIR),$(CPPOBJS))
-PATHCOBJS :=$(subst ./,$(ODIR),$(COBJS))
+PATHCPPOBJS :=$(call SETPATH,$(ODIR),$(CPPOBJS))
+PATHCOBJS :=$(call SETPATH,$(ODIR),$(COBJS))
+#	>>	DIRS VARIABLES
+DIRCPPOBJS :=$(sort $(dir $(PATHCPPOBJS)))
+DIRCOBJS :=$(sort $(dir $(PATHCOBJS)))
+#	>>	OUTPUT'S EXECUTABLE DIRECTORY
+COMPILE :=$(EXEDIR)$(APP)$(EXTENSION)
 
-#	    [VAR-FUNCTIONS TO COMPILE]
-#---------------------------------------#
+#	    						[VAR-FUNCTIONS TO COMPILE]
+#--------------------------------------------------------------------------------------------#
 #
 #
 #	>	MAKEOBJS MACRO	<
@@ -77,34 +113,14 @@ PATHCOBJS :=$(subst ./,$(ODIR),$(COBJS))
 #	$(4): Another dependencies
 #	$(5): Flags
 #
-define MAKEOBJS
+define MAKEOBJ
 $(2): $(3) $(4)
-$(1) -c -o $(2) $(3) $(5)
+	$(1) -c -o $(2) $(3) $(5)
 endef 
 #
-#	>	SETPATHS MACRO	<
-#	$(1): New path
-#	$(2): Source file
-#
-define SETPATH
-$(subst ./,$(1),$(patsubst %.c,%.o,$(patsubst %.cpp,%.o,$(2))))
-endef
 
-#MAKECPPOBJS =$($(CC) -o $(subst ./,$(ODIR),$(patsubst %.cpp,%.o,$(input))) -c $(input) $(CCFLAGS) $(PROJECT_LIBS) )
-#MAKECOBJS =$($(C) -o $(subst ./,$(ODIR),$(patsubst %.c,%.o,$(input))) -c $(input) $(CFLAGS) $(PROJECT_LIBS))
-#
-#        >> RULE'S GENERATOR FOR COMPILE MULTIPLE FILES
-
-#FOREACH_CPPOBJS :=$(foreach cppobj,$(ALLCPPS),$(eval $(call $(MAKECPPOBJS) $(cppobj))))
-#FOREACH_COBJS :=$(foreach cobj,$(ALLCS) ,$(eval $(call $(MAKECPPOBJS) $(cobj))))
-
-#
-FOREACH_CPPOBJS :=$(foreach cppobj,$(ALLCPPS),$(eval $(call $(MAKEOBJS),$(CC),$(call $(SETPATH),$(ODIR),$(cppobj)),$(cppobj),,$(CCFLAGS))))
-#
-FOREACH_COBJS :=$(foreach cobj,$(ALLCS),$(eval $(call $(MAKEOBJS),$(C),$(call $(SETPATH),$(ODIR),$(cobj)),$(cobj),,$(CFLAGS))))
-
-#				 [RULES]
-#---------------------------------------#
+#										 [RULES]
+#--------------------------------------------------------------------------------------------#
 #
 #	>>	PHONY RULES
 .PHONY: show_info clear
@@ -112,30 +128,19 @@ FOREACH_COBJS :=$(foreach cobj,$(ALLCS),$(eval $(call $(MAKEOBJS),$(C),$(call $(
 
 
 
-
-
-
 #	>>	MAIN RULE
-$(APP): executable
+$(APP): $(DIRCPPOBJS) $(DIRCOBJS) $(EXEDIR) $(COMPILE)
+
+
 
 #	>>	EXECUTABLE RULE
-executable: $(PATHCPPOBJS) $(PATHCOBJS)
-	$(CC) -o $(call $(SETPATH),$(EXEDIR),$(APP)$(EXTENSION) $^ $(LIBS)
-
-#	>>	DEBUG RULE
-debug: BUILD := $(BIN)/debug
-debug: CCFLAGS += -DDEBUG -g
-debug: CFLAGS += -DDEBUG -g
-debug: DEFAULT_RULE := debug
-debug: executable 
-
-#	>>	TEST RULE
-test: BUILD := $(BIN)/test
-test: DEFAULT_RULE:= test
-test: executable 
+$(COMPILE): $(PATHCPPOBJS) $(PATHCOBJS)
+	$(CC) -o $@ $^ $(LIBSPATH) $(LIBS) $(CCFLAGS)
+	echo $(shell "    \n")
+	$(MSG)
 
 #	>>	REMAKE RULE
-remake: clean $(DEFAULT_RULE)
+rebuild: clean $(APP)
 
 #	>>	CLEAN RULE
 clean:
@@ -143,25 +148,30 @@ clean:
 
 
 
-#	----------	HELPERS	----------	#
+# -------------------------------------- > HELPERS < -------------------------------------- #
 #	>>	CPP HELPER RULE
-$(PATHCPPOBJS): $(ALLCPPS)
+$(DIRCPPOBJS): $(ALLCPPS)
 	mkdir -p $(@D)
 	$(FOREACH_CPPOBJS)
 
-
 #	>>	C HELPER RULE
-$(PATHCOBJS): $(ALLCS)
+$(DIRCOBJS): $(ALLCS)
 	mkdir -p $(@D)
 	$(FOREACH_COBJS)
 
+$(EXEDIR):
+	mkdir -p $@
 
 show_info:
-	$(info $(PATHCPPOBJS))
-	$(info $(PATHCOBJS))
+	$(info $(PATH_HEADERS))
 	$(info $(ALLCPPS))
 	$(info $(ALLCS))
 
 
+#        >> RULE'S GENERATOR FOR COMPILE MULTIPLE FILES
+#
+FOREACH_CPPOBJS :=$(foreach cppobj,$(ALLCPPS),$(eval $(call MAKEOBJ,$(CC),$(call SETPATH,$(ODIR),$(cppobj)),$(cppobj), ,$(CCFLAGS))))
+#
+FOREACH_COBJS :=$(foreach cobj,$(ALLCS),$(eval $(call MAKEOBJ,$(C),$(call SETPATH,$(ODIR),$(cobj)),$(cobj), ,$(CFLAGS))))
 
 

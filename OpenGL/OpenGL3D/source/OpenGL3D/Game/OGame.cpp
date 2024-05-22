@@ -1,5 +1,5 @@
-#include<OpenGL3D/Game/OGame.hpp>
-#include<OpenGL3D/Window/OWindow.hpp>
+#include<OGame.hpp>
+#include<OWindow.hpp>
 #include<Windows.h>
 
 

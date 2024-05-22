@@ -1,22 +1,23 @@
-#include<OpenGL3D/Graphics/OGraphicsEngine.hpp>
-#include<glad/glad_wgl.h>
-#include<glad/glad.h>
+#include<OGraphicsEngine.hpp>
+#include<glad_wgl.h>
+#include<glad.h>
 #include<cassert>
 
 OGraphicsEngine::OGraphicsEngine()
 {
 	WNDCLASSEX wc={};
-	wc.cbSize=sizeof(WNDXLASSEX);
-	wc.lpszClassName=L"NOT A VWINDOW";
-	wc.lpfnWndProc=DefWinProc;
+	wc.cbSize=sizeof(WNDCLASSEX);
+	wc.lpszClassName=(LPCSTR)"NOT A VWINDOW";
+	wc.lpfnWndProc=DefWindowProc;
 	
-	auto classId=ResgistClassEx(&wc);
+	auto classId=RegisterClassEx(&wc);
+	//auto classId=ResgisterClassEx(&wc);
 	assert(classId);
 	
 	auto notVWindow=CreateWindowEx(
 	NULL,
 	MAKEINTATOM(classId),
-	L"",
+	(LPCSTR)"",
 	WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU,
 	CW_USEDEFAULT, CW_USEDEFAULT,
 	CW_USEDEFAULT, CW_USEDEFAULT,

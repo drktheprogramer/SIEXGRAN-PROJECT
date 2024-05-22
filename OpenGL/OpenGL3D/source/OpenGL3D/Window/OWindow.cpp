@@ -1,4 +1,4 @@
-#include<OpenGL3D/Window/OWindow.hpp>
+#include<OWindow.hpp>
 #include<Windows.h>
 #include<cassert>
 
@@ -29,7 +29,7 @@ OWindow::OWindow()
 {
     WNDCLASSEX wclass={};
     wclass.cbSize=sizeof(WNDCLASSEX);
-    wclass.lpszClassName=L"OpenGL Window";
+    wclass.lpszClassName=(LPCSTR)"OpenGL Window";
     wclass.lpfnWndProc=&WndProc;
 
     auto classId=RegisterClassEx(&wclass);
@@ -38,7 +38,7 @@ OWindow::OWindow()
 
     RECT rc={0,0,1024,768};
     AdjustWindowRect(&rc,WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU,false);
-    m_handle=CreateWindowEx(NULL,MAKEINTATOM(classId),L"SIEXGRAN PROJECT | OpenGl Window",WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU,
+    m_handle=CreateWindowEx(NULL,MAKEINTATOM(classId),(LPCSTR)"SIEXGRAN PROJECT | OpenGl Window",WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU,
     CW_USEDEFAULT, CW_USEDEFAULT, rc.right-rc.left, rc.bottom-rc.top,NULL,NULL,NULL,NULL);
     assert(m_handle);
 
