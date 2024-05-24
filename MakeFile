@@ -40,7 +40,7 @@ NAMEAPP := $(APP)
 EXTENSION := .exe
 #	>>	DEFAULT RULE VARIABLE
 #	Stores the rule to set in 'remake' rule for debbugin, release or test build
-VERSION := DEBUG 
+VERSION := 
 #	>>	COMPLILERS VARIABLES 
 CC := g++
 C := gcc
@@ -55,18 +55,18 @@ CFLAGS :=$(CSTD) $(PATH_HEADERS) -Wall -Wpedantic -Wconversion  #-fsanitize=unde
 # ---------------- | ------------- | --- | [VERSION] | --- | ------------- | --------------- # 
 ifdef RELEASE 	#	>>	RELEASE VERSION
 NAMEAPP +=$(addsuffix _v $(RELEASE),$(APP))
-VERSION := RELEASE
+VERSION := Release
 CCFLAGS += -O3
 CFLAGS += -O3
 else
 ifdef TEST 		#	>>	TEST VERSION
 NAMEAPP +=$(addsuffix _snapshot $(TEST),$(APP))
-VERSION:= TEST
+VERSION:= Test
 CCFLAGS += -O3
 CFLAGS += -O3
 else 			#	>>	DEFAULT VERSION = DEBUG VERSION
 NAMEAPP +=$(addsuffix _debug_version_,$(APP))
-VERSION := DEBUG
+VERSION := Debug
 CCFLAGS += -DDEBUG -g
 CFLAGS += -DDEBUG -g
 BUILD := $(BIN)/$(VERSION)
