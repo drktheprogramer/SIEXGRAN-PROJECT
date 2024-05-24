@@ -8,11 +8,20 @@ MSG := echo Builded succesfuly!
 #--------------------------------------------------------------------------------------------#
 #	
 #	>>	MAIN PROJECT HEADERS
-#
+# 
 #	>>	HEADERS PATH
-HEADERS :=$(shell find ./ -iname *.h* )
+HEADERS :=$(shell find ./ -iname *.h* ) 
 DIRHEADERS :=$(subst engine,./siexgran engine,$(patsubst %,"%",$(patsubst /www%,,$(sort $(sort $(dir $(HEADERS)))))))
 PATH_HEADERS :=$(subst /",",$(subst "./,-I "$(PWD)/,$(DIRHEADERS)))
+#								>	C2H MACRO	<
+#	$(1): .c or .cpp file
+#
+#								   --RESUME--
+#	Read a C or CPP file and get the identical basename header file
+define C2H 
+$(shell find . -type f -iname *$(basename $(notdir $(1))).h*)
+endef
+# headers from Siexgran Engine 
 COREHEADERS =: siexgran engine/componentstorage.hpp \
 siexgran engine/entitymanager.hpp \
 siexgran engine/utils/common_tags_cmps_traits.hpp \
@@ -27,6 +36,7 @@ PWD :=$(shell pwd)
 #
 #	>>	OUTPUT FILE
 APP := game
+NAMEAPP := $(APP)
 EXTENSION := .exe
 #	>>	DEFAULT RULE VARIABLE
 #	Stores the rule to set in 'remake' rule for debbugin, release or test build
@@ -41,27 +51,21 @@ CSTD := -std=c17
 CCFLAGS :=$(CCSTD) $(PATH_HEADERS) -Wall -Wpedantic -Wconversion #-fsanitize=undefined -O3
 CFLAGS :=$(CSTD) $(PATH_HEADERS) -Wall -Wpedantic -Wconversion  #-fsanitize=undefined -O3
 
-#
-#
-LIBSPATH := -L/c/'Program Files (x86)'/'Windows Kits'/10/Lib/'10.0.19041.0'/um/x64
-LIBS := -lOpenGl32 -lGdi32
-
 
 # ---------------- | ------------- | --- | [VERSION] | --- | ------------- | --------------- # 
 ifdef RELEASE 	#	>>	RELEASE VERSION
-$(APP) += v$(RELEASE)
+NAMEAPP +=$(APP)_v$(RELEASE)
 VERSION := RELEASE
-EXEDIR := ./exe/
 CCFLAGS += -O3
 CFLAGS += -O3
 else
 ifdef TEST 		#	>>	TEST VERSION
-$(APP) += snapshot v$(TEST)
+NAMEAPP +=$(APP)snapshot$(TEST)
 VERSION:= TEST
 CCFLAGS += -O3
 CFLAGS += -O3
-else 			#	>>	DEFAULT VERSION
-$(APP) += _debug_version
+else 			#	>>	DEFAULT VERSION = DEBUG VERSION
+NAMEAPP +=$(APP)_debug_version
 VERSION := DEBUG
 CCFLAGS += -DDEBUG -g
 CFLAGS += -DDEBUG -g
@@ -78,7 +82,12 @@ SRC := ./src
 BUILD :=$(BIN)/$(VERSION)
 ODIR :=$(BUILD)/obj/
 DDIR :=$(BUILD)/dep/
+ifdef RELEASE
+EXEDIR := ./exe/
+else
 EXEDIR :=$(BUILD)/exe/
+endif
+
 
 
 #		  						  [ALL CPP AND C FILES]
@@ -94,6 +103,9 @@ ALLCS :=$(shell find ./ -iname *.c -not -iname *glx*)
 #	$(1): New patht
 #	$(2): Source file
 #
+#								   --RESUME--
+#	Subst mainly .c or .cpp files for .o files path names, but works for add directorys to a
+#	relative path 
 define SETPATH
 $(subst ./,$(1),$(patsubst %.c,%.o,$(patsubst %.cpp,%.o,$(2))))
 endef
@@ -107,7 +119,14 @@ PATHCOBJS :=$(call SETPATH,$(ODIR),$(COBJS))
 DIRCPPOBJS :=$(sort $(dir $(PATHCPPOBJS)))
 DIRCOBJS :=$(sort $(dir $(PATHCOBJS)))
 #	>>	OUTPUT'S EXECUTABLE DIRECTORY
-COMPILE :=$(EXEDIR)$(APP)$(EXTENSION)
+COMPILE :=$(EXEDIR)$(NAMEAPP)$(EXTENSION)
+
+#	    					 [LIBS AND PATHS FOR THE PROJECT]
+#--------------------------------------------------------------------------------------------#
+#
+LIBSPATH := -L/c/'Program Files (x86)'/'Windows Kits'/10/Lib/'10.0.19041.0'/um/x64
+LIBS := -lOpenGl32.lib -lGdi32.lib
+
 
 #	    						[VAR-FUNCTIONS TO COMPILE]
 #--------------------------------------------------------------------------------------------#
@@ -120,6 +139,12 @@ COMPILE :=$(EXEDIR)$(APP)$(EXTENSION)
 #	$(4): Another dependencies
 #	$(5): Flags
 #
+#										--RESUME--
+#	Creates an automatic custom rule
+#	- Target Label: $(2) (Output file)
+#	- Dependencies: $(3) $(4) (Source and another's dependencies like headers files, 
+#	respectevily)
+#	- Rule's Recipe: it's for compile all files or "make an object from a file" 
 define MAKEOBJ
 $(2): $(3) $(4)
 	$(1) -c -o $(2) $(3) $(5)
@@ -131,54 +156,50 @@ endef
 #
 #	>>	PHONY RULES
 .PHONY: show_info clear
-
-
-
-
+#
 #	>>	MAIN RULE
-$(APP): $(DIRCPPOBJS) $(DIRCOBJS) $(EXEDIR) $(COMPILE)
-
-
-
+$(NAMEAPP): $(DIRCPPOBJS) $(DIRCOBJS) $(EXEDIR) $(COMPILE)
+#
 #	>>	EXECUTABLE RULE
 $(COMPILE): $(PATHCPPOBJS) $(PATHCOBJS)
 	$(CC) -o $@ $^ $(LIBSPATH) $(LIBS) $(CCFLAGS)
 	echo $(shell "    \n")
 	$(MSG)
-
+#
 #	>>	REMAKE RULE
-rebuild: clean $(APP)
-
+rebuild: clean $(NAMEAPP)
+#
 #	>>	CLEAN RULE
 clean:
 	rm -r $(BIN)
 
-
-
 # -------------------------------------- > HELPERS < -------------------------------------- #
+#
 #	>>	CPP HELPER RULE
 $(DIRCPPOBJS): $(ALLCPPS)
 	mkdir -p $(@D)
 	$(FOREACH_CPPOBJS)
-
+#
+#
 #	>>	C HELPER RULE
 $(DIRCOBJS): $(ALLCS)
 	mkdir -p $(@D)
 	$(FOREACH_COBJS)
-
+#
+#
+#	>>	DIR FOR EXE FILE HELPER RULE
 $(EXEDIR):
 	mkdir -p $@
-
+#
+#
+#	>>	(ONLY FOR DEBUGGIN THE MAKEFILE) SHOW INFO RULE
 show_info:
-	$(info $(PATH_HEADERS))
-	$(info $(ALLCPPS))
-	$(info $(ALLCS))
-
-
-#        >> RULE'S GENERATOR FOR COMPILE MULTIPLE FILES
+	$(info $(call C2H,./OpenGl/OpenGl3D/source/OpenGL3D/Game/OGame.cpp))
 #
-FOREACH_CPPOBJS :=$(foreach cppobj,$(ALLCPPS),$(eval $(call MAKEOBJ,$(CC),$(call SETPATH,$(ODIR),$(cppobj)),$(cppobj), ,$(CCFLAGS))))
 #
-FOREACH_COBJS :=$(foreach cobj,$(ALLCS),$(eval $(call MAKEOBJ,$(C),$(call SETPATH,$(ODIR),$(cobj)),$(cobj), ,$(CFLAGS))))
+#
+#	>> RULE'S GENERATOR FOR COMPILE MULTIPLE FILES
+FOREACH_CPPOBJS :=$(foreach cppobj,$(ALLCPPS),$(eval $(call MAKEOBJ,$(CC),$(call SETPATH,$(ODIR),$(cppobj)),$(cppobj),$(call C2H,$(cppobj)),$(CCFLAGS))))
+FOREACH_COBJS :=$(foreach cobj,$(ALLCS),$(eval $(call MAKEOBJ,$(C),$(call SETPATH,$(ODIR),$(cobj)),$(cobj),$(call C2H,$(cobj)),$(CFLAGS))))
 
 

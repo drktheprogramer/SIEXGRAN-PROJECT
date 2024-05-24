@@ -1,43 +1,38 @@
 #include<OGame.hpp>
+#include<OGraphicsEngine.hpp>
 #include<OWindow.hpp>
-#include<Windows.h>
+
 
 
 OGame::OGame()
 {
+    m_graphicsEngine=std::make_unique<OGraphicsEngine>();
     m_display=std::make_unique<OWindow>();
+
+    m_display->makeCurrentContext();
 }
 
 OGame::~OGame()
 {
 }
 
-void OGame::run()
+void OGame::onCreate()
 {
-    
-    while(m_isRunning)
-    {
-        MSG msg={};
-        if(PeekMessage(&msg,NULL,NULL,NULL,PM_REMOVE))
-        if(msg.message == WM_QUIT)
-        {
-                m_isRunning=false;
-                continue;
-        }
-        else
-        {
-            TranslateMessage(&msg);
-            DispatchMessage(&msg);
-        }
-        Sleep(1);
-    }
 }
+
+void OGame::onUpdate()
+{
+    m_graphicsEngine->clear(OVec4(1, 0, 0, 1));
+
+    m_display->present(false);
+}
+
+void OGame::onQuit()
+{
+}
+
 
 void OGame::quit()
 {
 }
 
-int main(){
-    OGame game;
-    game.run();
-}
