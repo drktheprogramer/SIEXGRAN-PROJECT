@@ -54,18 +54,18 @@ CFLAGS :=$(CSTD) $(PATH_HEADERS) -Wall -Wpedantic -Wconversion  #-fsanitize=unde
 
 # ---------------- | ------------- | --- | [VERSION] | --- | ------------- | --------------- # 
 ifdef RELEASE 	#	>>	RELEASE VERSION
-NAMEAPP +=$(APP)_v$(RELEASE)
+NAMEAPP +=$(addsuffix _v $(RELEASE),$(APP))
 VERSION := RELEASE
 CCFLAGS += -O3
 CFLAGS += -O3
 else
 ifdef TEST 		#	>>	TEST VERSION
-NAMEAPP +=$(APP)snapshot$(TEST)
+NAMEAPP +=$(addsuffix _snapshot $(TEST),$(APP))
 VERSION:= TEST
 CCFLAGS += -O3
 CFLAGS += -O3
 else 			#	>>	DEFAULT VERSION = DEBUG VERSION
-NAMEAPP +=$(APP)_debug_version
+NAMEAPP +=$(addsuffix _debug_version_,$(APP))
 VERSION := DEBUG
 CCFLAGS += -DDEBUG -g
 CFLAGS += -DDEBUG -g
@@ -172,6 +172,7 @@ rebuild: clean $(NAMEAPP)
 #	>>	CLEAN RULE
 clean:
 	rm -r $(BIN)
+	
 
 # -------------------------------------- > HELPERS < -------------------------------------- #
 #
