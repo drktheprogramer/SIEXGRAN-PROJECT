@@ -1,6 +1,6 @@
 #include<OGraphicsEngine.hpp>
 #include<glad.h>
-#inlclude<Windows.h>
+#include<Windows.h>
 #include<cassert>
 #include<stdexcept>
 
