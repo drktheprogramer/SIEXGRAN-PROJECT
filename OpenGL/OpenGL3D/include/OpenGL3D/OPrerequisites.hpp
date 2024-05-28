@@ -1,4 +1,8 @@
 #pragma once
+#include<memory>
+struct OVertexArrayObject;
+
+typedef std::shared_ptr<OVertexArrayObject> OVertexArrayObjectPtr;
 
 typedef float f32;
 typedef int i32;
