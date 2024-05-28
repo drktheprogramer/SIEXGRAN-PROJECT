@@ -33,6 +33,7 @@ void OGame::onUpdate()
     m_graphicsEngine->clear(OVec4(1, 0, 0, 1));
 
  m_graphicsEngine->setVertexArrayObject(m_triangleVAO);
+ m_graphicsEngine->drawTriangles(3,0);
 
     m_display->present(false);
 }
