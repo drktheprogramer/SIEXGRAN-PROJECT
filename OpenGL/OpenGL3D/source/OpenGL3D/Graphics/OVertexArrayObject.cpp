@@ -26,5 +26,6 @@ OVertexArrayObject::~OVertexArrayObject()
 
 ui32 OVertexArrayObject::getId()
 {
+ return m_vertexArrayObjectId;
 }
 //min 27:41
