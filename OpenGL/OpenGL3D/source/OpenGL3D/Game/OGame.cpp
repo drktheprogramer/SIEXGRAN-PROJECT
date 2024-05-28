@@ -25,7 +25,7 @@ void OGame::onCreate()
   0.0f,0.5f,0.0f
  };
 
-m_triangleVAO =m_graphicsEngine->createArrayObject({(void) triangleVertices,sizeof(f32)*3,3});
+ m_triangleVAO=m_graphicsEngine->createArrayObject({(void) triangleVertices,sizeof(f32)*3,3});
 }
 
 void OGame::onUpdate()
