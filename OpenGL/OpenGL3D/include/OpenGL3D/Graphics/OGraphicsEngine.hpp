@@ -7,6 +7,6 @@ struct OGraphicsEngine {
 	~OGraphicsEngine();
 
 	void clear(const OVec4& color);
- void setViewPort(const ORect& size);
+ void setViewport(const ORect& size);
 };
 
