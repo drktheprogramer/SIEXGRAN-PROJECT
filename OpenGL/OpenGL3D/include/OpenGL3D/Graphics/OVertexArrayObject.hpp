@@ -2,7 +2,7 @@
 #include<OPrerequisites.hpp>
 
 struct OVertexArrayObject {
- OVertexArrayObject();
+ OVertexArrayObject(const OVertexBufferData& data);
  ~OVertexArrayObject();
 
 private:
