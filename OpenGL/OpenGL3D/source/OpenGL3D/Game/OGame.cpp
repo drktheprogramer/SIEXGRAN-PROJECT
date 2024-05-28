@@ -10,6 +10,7 @@ OGame::OGame()
     m_display=std::make_unique<OWindow>();
 
     m_display->makeCurrentContext();
+ m_graphicsEngine->setViewport(m_display->getInnerSize());
 }
 
 OGame::~OGame()
