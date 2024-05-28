@@ -23,4 +23,8 @@ OVertexArrayObject::~OVertexArrayObject()
  glDeleteVertexArrays(1,&m_vertexArrayObjectId);
 }
 
+
+ui32 OVertexArrayObject::getId()
+{
+}
 //min 27:41
