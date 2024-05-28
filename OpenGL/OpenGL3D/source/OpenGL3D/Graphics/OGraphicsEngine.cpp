@@ -24,5 +24,5 @@ OVertexArrayObjectPtr OGraphicsEngine::createArrayObject(const OVertexBufferData
 
 void OGraphicsEngine::setVertexArrayObject(const OVertexArrayObjectPtr& vao)
 {
- glBindVertexArray();
+ glBindVertexArray(vao->getId());
 }
