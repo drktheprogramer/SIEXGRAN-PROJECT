@@ -26,3 +26,8 @@ void OGraphicsEngine::setVertexArrayObject(const OVertexArrayObjectPtr& vao)
 {
  glBindVertexArray(vao->getId());
 }
+
+void OGraphicsEngine::drawTriangles(ui32 vertexCount,ui32 offset)
+{
+ glDrawArrays(GL_TRIANGLES,offset,vertexCount);
+}
