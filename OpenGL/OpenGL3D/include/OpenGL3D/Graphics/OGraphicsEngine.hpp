@@ -6,9 +6,10 @@ struct OGraphicsEngine {
 	OGraphicsEngine();
 	~OGraphicsEngine();
 
-
+OVertexArrayObjectPtr createArrayObject(const OVertexBufferData& data);
 	void clear(const OVec4& color);
  void setViewport(const ORect& size);
- OVertexArrayObjectPtr createArrayObject(const OVertexBufferData& data);
+ void setVertexArrayObject(const OVertexArrayObjectPtr& vao);
+ 
 };
 
