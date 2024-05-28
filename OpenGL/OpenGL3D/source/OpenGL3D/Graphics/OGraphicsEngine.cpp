@@ -21,3 +21,8 @@ OVertexArrayObjectPtr OGraphicsEngine::createArrayObject(const OVertexBufferData
 {
  return std::make_shared<OVertexArrayObjectPtr>(data);
 }
+
+void OGraphicsEngine::setVertexArrayObject(const OVertexArrayObjectPtr& vao)
+{
+ glBindVertexArray();
+}
