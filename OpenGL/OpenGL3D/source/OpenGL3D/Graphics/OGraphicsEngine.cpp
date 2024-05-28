@@ -16,3 +16,8 @@ void OGraphicsEngine::setViewport(const ORect& size)
  glViewport(size.left, size.top, size.width, size.heigth);
 
 }
+
+OVertexArrayObjectPtr OGraphicsEngine::createArrayObject(const OVertexBufferData& data)
+{
+ return std::make_shared<OVertexArrayObjectPtr>(data);
+}
