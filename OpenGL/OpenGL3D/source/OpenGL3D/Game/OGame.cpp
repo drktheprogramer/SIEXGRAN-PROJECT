@@ -25,12 +25,14 @@ void OGame::onCreate()
   0.0f,0.5f,0.0f
  };
 
- m_graphicsEngine->createArrayObject({(void) triangleVertices,sizeof(f32)*3,3});
+m_triangleVAO =m_graphicsEngine->createArrayObject({(void) triangleVertices,sizeof(f32)*3,3});
 }
 
 void OGame::onUpdate()
 {
     m_graphicsEngine->clear(OVec4(1, 0, 0, 1));
+
+ m_graphicsEngine->setVertexArrayObject(m_triangleVAO);
 
     m_display->present(false);
 }
