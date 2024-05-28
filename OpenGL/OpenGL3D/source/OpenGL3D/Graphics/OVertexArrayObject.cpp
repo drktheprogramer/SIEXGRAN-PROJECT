@@ -12,12 +12,15 @@ OVertexArrayObject::OVertexArrayObject(const OVertexBufferData& data)
  glBufferData(GL_ARRAY_BUFFER,data.vertexSize*data.listSize,data.verticesList,GL_STATIC_DRAW);
 
  glVertexAttribPointer(0,3,GL_FLOAT,GL_FALSE,data.vertexSize,0);
+ glEnableAttribArray(0);
 
  glBindVertexArray(0);
 }
 
 OVertexArrayObject::~OVertexArrayObject()
 {
+ glDeleteBuffers(1,&m_vertexBufferId);
+ glDeleteVertexArrays(1,&m_vertexArrayObjectId);
 }
 
 //min 27:41
