@@ -10,3 +10,24 @@ void OGraphicsEngine::clear(const OVec4 &color)
 	glClearColor(color.x,color.y,color.z,color.w);
 	glClear(GL_COLOR_BUFFER_BIT);
 }
+
+void OGraphicsEngine::setViewport(const ORect& size)
+{
+ glViewport(size.left, size.top, size.width, size.heigth);
+
+}
+
+OVertexArrayObjectPtr OGraphicsEngine::createArrayObject(const OVertexBufferData& data)
+{
+ return std::make_shared<OVertexArrayObjectPtr>(data);
+}
+
+void OGraphicsEngine::setVertexArrayObject(const OVertexArrayObjectPtr& vao)
+{
+ glBindVertexArray(vao->getId());
+}
+
+void OGraphicsEngine::drawTriangles(ui32 vertexCount,ui32 offset)
+{
+ glDrawArrays(GL_TRIANGLES,offset,vertexCount);
+}
