@@ -1,8 +1,8 @@
-#include <OGL3D/Window/OWindow.h>
+#include <OWindow.h>
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
-#include <glad/glad.h>
-#include <glad/glad_glx.h>
+#include <glad.h>
+#include <glad_glx.h>
 #include <assert.h>
 #include <stdexcept>
 #include "../Graphics/X11/CX11Globals.h"
