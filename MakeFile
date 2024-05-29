@@ -62,6 +62,7 @@ CSTD := -std=c17
 ifeq ($(OS),Windows_NT) #FOR WINDOWS SYSTEMS
 CCFLAGS :=$(CCSTD) $(PATH_HEADERS) -Wall -Wpedantic -Wconversion -O3
 CFLAGS :=$(CSTD) $(PATH_HEADERS) -Wall -Wpedantic -Wconversion -O3
+else
 ifeq ($(OS),Linux) #FOR LINUX SYSTEMS
 CCFLAGS :=$(CCSTD) $(PATH_HEADERS) -Wall -Wpedantic -Wconversion -fsanitize=undefined -O3
 CFLAGS :=$(CSTD) $(PATH_HEADERS) -Wall -Wpedantic -Wconversion  -fsanitize=undefined -O3
@@ -118,13 +119,17 @@ endif
 ifeq ($(OS),Windows_NT) #FOR WINDOWS SYSTEMS
 ALLCPPS :=$(shell find ./ -iname *.cpp -not -iname *Linux* -not -iname *X11* -not -iname *glx* -not -iname *Cocoa*)
 ALLCS :=$(shell find ./ -iname *.c -not -iname *Linux* -not -iname *X11* -not -iname *glx* -not -iname *Cocoa*)
+else
 ifeq ($(OS),Linux) #FOR LINUX SYSTEMS
 ALLCPPS :=$(shell find ./ -iname *.cpp -not -iname *Win* -not -iname *wgl* -not -iname *Cocoa*)
 ALLCS :=$(shell find ./ -iname *.c -not -iname *Win* -not -iname *wgl* -not -iname *Cocoa*)
+else
 ifeq ($(OS),Cocoa) #FOR MAC SYSTEMS
 ALLCPPS :=$(shell find ./ -iname *.cpp -not -iname *Linux* -not -iname *X11* -not -iname *wgl*)
 ALLCS :=$(shell find ./ -iname *.c -not -iname *Linux* -not -iname *X11* -not -iname *wgl*)
 else
+ALLCPPS :=$(shell find ./ -iname *.cpp -not -iname *Linux* -not -iname *X11* -not -iname *glx* -not -iname *Cocoa*)
+ALLCS :=$(shell find ./ -iname *.c -not -iname *Linux* -not -iname *X11* -not -iname *glx* -not -iname *Cocoa*)
 endif
 endif
 endif 
@@ -158,13 +163,18 @@ COMPILE :=$(EXEDIR)$(NAMEAPP)$(EXTENSION)
 #
 
 ifeq ($(OS),Windows_NT) #FOR WINDOWS SYSTEMS
-LIBSPATH := -L$(PWD)/Libs/Win32
-LIBS := -lOpenGl32.lib -lGdi32.lib
-ifeq ($(OS),Linux) #FOR LINUX SYSTEMS
-LIBSPATH := -L$(PWD)/Libs/Linux
-LIBS := -lX11 -lXutils
-ifeq ($(OS),Cocoa) #FOR MAC SYSTEMS
+#LIBSPATH := -L"$(PWD)/Libs/Win32"
+LIBSPATH := -L"/c/Program Files (x86)/Windows Kits/10/Lib/10.0.19041.0/um/x64"
+LIBS := -lOpenGl32 -lGdi32
 else
+ifeq ($(OS),Linux) #FOR LINUX SYSTEMS
+LIBSPATH := -L"$(PWD)/Libs/Linux"
+LIBS := -lX11 -lXutils
+else
+ifeq ($(OS),Cocoa) #FOR MAC SYSTEMS
+else #FOR MINGW64
+
+LIBS := -lOpenGl32 -lGdi32
 endif
 endif
 endif
