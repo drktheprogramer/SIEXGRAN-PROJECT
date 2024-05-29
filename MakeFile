@@ -60,8 +60,8 @@ CCSTD := -std=c++20
 CSTD := -std=c17
 #	>>	FLAGS VARIABLES 
 ifeq ($(OS),Windows_NT) #FOR WINDOWS SYSTEMS
-CCFLAGS :=$(CCSTD) $(PATH_HEADERS) -Wall -Wpedantic -Wconversion #-fsanitize=undefined -O3
-CFLAGS :=$(CSTD) $(PATH_HEADERS) -Wall -Wpedantic -Wconversion  #-fsanitize=undefined -O3
+CCFLAGS :=$(CCSTD) $(PATH_HEADERS) -Wall -Wpedantic -Wconversion -O3
+CFLAGS :=$(CSTD) $(PATH_HEADERS) -Wall -Wpedantic -Wconversion -O3
 ifeq ($(OS),Linux) #FOR LINUX SYSTEMS
 CCFLAGS :=$(CCSTD) $(PATH_HEADERS) -Wall -Wpedantic -Wconversion -fsanitize=undefined -O3
 CFLAGS :=$(CSTD) $(PATH_HEADERS) -Wall -Wpedantic -Wconversion  -fsanitize=undefined -O3
