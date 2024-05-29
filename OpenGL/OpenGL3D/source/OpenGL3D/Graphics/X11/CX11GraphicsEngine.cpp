@@ -1,9 +1,9 @@
-#include <OGraphicsEngine.h>
+#include <OGraphicsEngine.hpp>
 #include <glad.h>
 #include <glad_glx.h>
 #include <stdexcept>
 #include <assert.h>
-#include <OWindow.h>
+#include <OWindow.hpp>
 #include <CX11Globals.h>
 
 Display* GlobalDisplay;
