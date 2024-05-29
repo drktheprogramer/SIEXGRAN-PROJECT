@@ -1,9 +1,7 @@
 #include<OGraphicsEngine.hpp>
-#include<glad_wgl.h>
+#include<OVertexArrayObject.hpp>
 #include<glad.h>
-#include<cassert>
 #include<memory>
-#include<stdexcept>
 
 
 void OGraphicsEngine::clear(const OVec4 &color)
