@@ -2,6 +2,7 @@
 #include<glad_wgl.h>
 #include<glad.h>
 #include<cassert>
+#include<memory>
 #include<stdexcept>
 
 
@@ -13,21 +14,21 @@ void OGraphicsEngine::clear(const OVec4 &color)
 
 void OGraphicsEngine::setViewport(const ORect& size)
 {
- glViewport(size.left, size.top, size.width, size.heigth);
+	glViewport(size.left, size.top, size.width, size.height);
 
 }
 
 OVertexArrayObjectPtr OGraphicsEngine::createArrayObject(const OVertexBufferData& data)
 {
- return std::make_shared<OVertexArrayObjectPtr>(data);
+	return std::make_shared<OVertexArrayObject>(data);
 }
 
 void OGraphicsEngine::setVertexArrayObject(const OVertexArrayObjectPtr& vao)
 {
- glBindVertexArray(vao->getId());
+	glBindVertexArray(vao->getId());
 }
 
 void OGraphicsEngine::drawTriangles(ui32 vertexCount,ui32 offset)
 {
- glDrawArrays(GL_TRIANGLES,offset,vertexCount);
+	glDrawArrays(GL_TRIANGLES,offset,vertexCount);
 }

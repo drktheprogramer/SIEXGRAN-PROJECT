@@ -4,8 +4,15 @@
 #
 #
 
+#						  		[OS VARIABLE STORE]
+#--------------------------------------------------------------------------------------------#
 #
+#	>>	Makefile's automatic readjust the output binary by OS variable
 OS :=$(shell uname)
+
+
+
+
 
 MSG := echo Builded succesfuly!
 #			  						[HEADERS PATHS]
@@ -52,8 +59,19 @@ C := gcc
 CCSTD := -std=c++20 
 CSTD := -std=c17
 #	>>	FLAGS VARIABLES 
+ifeq ($(OS),Windows_NT) #FOR WINDOWS SYSTEMS
 CCFLAGS :=$(CCSTD) $(PATH_HEADERS) -Wall -Wpedantic -Wconversion #-fsanitize=undefined -O3
 CFLAGS :=$(CSTD) $(PATH_HEADERS) -Wall -Wpedantic -Wconversion  #-fsanitize=undefined -O3
+ifeq ($(OS),Linux) #FOR LINUX SYSTEMS
+CCFLAGS :=$(CCSTD) $(PATH_HEADERS) -Wall -Wpedantic -Wconversion -fsanitize=undefined -O3
+CFLAGS :=$(CSTD) $(PATH_HEADERS) -Wall -Wpedantic -Wconversion  -fsanitize=undefined -O3
+else #FOR MAC OR OTHER DEVICES SYSTEMS
+CCFLAGS :=$(CCSTD) $(PATH_HEADERS) -Wall -Wpedantic -Wconversion -fsanitize=undefined -O3
+CFLAGS :=$(CSTD) $(PATH_HEADERS) -Wall -Wpedantic -Wconversion  -fsanitize=undefined -O3
+endif
+endif
+
+
 
 
 # ---------------- | ------------- | --- | [VERSION] | --- | ------------- | --------------- # 
@@ -97,9 +115,19 @@ endif
 #		  						  [ALL CPP AND C FILES]
 #--------------------------------------------------------------------------------------------#
 #
-ALLCPPS :=$(shell find ./ -iname *.cpp -not -iname *glx*)
-ALLCS :=$(shell find ./ -iname *.c -not -iname *glx*)
-
+ifeq ($(OS),Windows_NT) #FOR WINDOWS SYSTEMS
+ALLCPPS :=$(shell find ./ -iname *.cpp -not -iname *Linux* -not -iname *X11* -not -iname *glx* -not -iname *Cocoa*)
+ALLCS :=$(shell find ./ -iname *.c -not -iname *Linux* -not -iname *X11* -not -iname *glx* -not -iname *Cocoa*)
+ifeq ($(OS),Linux) #FOR LINUX SYSTEMS
+ALLCPPS :=$(shell find ./ -iname *.cpp -not -iname *Win* -not -iname *wgl* -not -iname *Cocoa*)
+ALLCS :=$(shell find ./ -iname *.c -not -iname *Win* -not -iname *wgl* -not -iname *Cocoa*)
+ifeq ($(OS),Cocoa) #FOR MAC SYSTEMS
+ALLCPPS :=$(shell find ./ -iname *.cpp -not -iname *Linux* -not -iname *X11* -not -iname *wgl*)
+ALLCS :=$(shell find ./ -iname *.c -not -iname *Linux* -not -iname *X11* -not -iname *wgl*)
+else
+endif
+endif
+endif 
 #	  						 [PATHS FOR EVERY CPP OR C OBJ]
 #--------------------------------------------------------------------------------------------#
 #	
@@ -128,10 +156,18 @@ COMPILE :=$(EXEDIR)$(NAMEAPP)$(EXTENSION)
 #	    					 [LIBS AND PATHS FOR THE PROJECT]
 #--------------------------------------------------------------------------------------------#
 #
-LIBSPATH := -L/c/'Program Files (x86)'/'Windows Kits'/10/Lib/'10.0.19041.0'/um/x64
+
+ifeq ($(OS),Windows_NT) #FOR WINDOWS SYSTEMS
+LIBSPATH := -L$(PWD)/Libs/Win32
 LIBS := -lOpenGl32.lib -lGdi32.lib
-
-
+ifeq ($(OS),Linux) #FOR LINUX SYSTEMS
+LIBSPATH := -L$(PWD)/Libs/Linux
+LIBS := -lX11 -lXutils
+ifeq ($(OS),Cocoa) #FOR MAC SYSTEMS
+else
+endif
+endif
+endif
 #	    						[VAR-FUNCTIONS TO COMPILE]
 #--------------------------------------------------------------------------------------------#
 #
@@ -162,7 +198,7 @@ endef
 .PHONY: show_info clear
 #
 #	>>	MAIN RULE
-$(NAMEAPP): $(DIRCPPOBJS) $(DIRCOBJS) $(EXEDIR) $(COMPILE)
+$(APP): $(DIRCPPOBJS) $(DIRCOBJS) $(EXEDIR) $(COMPILE)
 #
 #	>>	EXECUTABLE RULE
 $(COMPILE): $(PATHCPPOBJS) $(PATHCOBJS)
@@ -171,7 +207,7 @@ $(COMPILE): $(PATHCPPOBJS) $(PATHCOBJS)
 	$(MSG)
 #
 #	>>	REMAKE RULE
-rebuild: clean $(NAMEAPP)
+rebuild: clean $(APP)
 #
 #	>>	CLEAN RULE
 clean:

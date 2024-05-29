@@ -1,8 +1,9 @@
 #pragma once
 #include<memory>
-
+#include<OPrerequisites.hpp>
 struct OGraphicsEngine;
 struct OWindow;
+
 struct OGame {
     OGame();
     ~OGame();

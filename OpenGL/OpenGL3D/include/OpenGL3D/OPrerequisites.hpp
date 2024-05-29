@@ -12,5 +12,5 @@ typedef unsigned int ui32;
 struct OVertexBufferData {
  void* verticesList=nullptr;
  ui32 vertexSize=0;
- ui33 listSize=0;
+ ui32 listSize=0;
 };
