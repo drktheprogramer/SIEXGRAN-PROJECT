@@ -35,5 +35,12 @@ extern Window GlobalWindowRoot;
 extern Visual *GlobalVisual;
 extern Colormap GlobalColorMap;
 
-extern void X11CheckEvent(OWindow* window,void* event);
+void X11CheckEvent(OWindow*window,void* event)
+{
+    XEvent xev =*(XEvent*)event;
+
+    //Check the event
+    if (xev.xclient.window == *(Window*)window)
+       WndProc(window,xev);
+}
 
