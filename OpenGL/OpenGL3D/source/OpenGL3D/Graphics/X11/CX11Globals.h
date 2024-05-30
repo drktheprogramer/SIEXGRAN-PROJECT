@@ -27,7 +27,7 @@ SOFTWARE.*/
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
 
-class OWindow;
+struct OWindow;
 
 extern Display* GlobalDisplay;
 extern int GlobalScreenId;
