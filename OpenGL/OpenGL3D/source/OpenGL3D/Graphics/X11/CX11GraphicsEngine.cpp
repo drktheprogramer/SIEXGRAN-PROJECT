@@ -1,10 +1,10 @@
-#include <OGL3D/Graphics/OGraphicsEngine.h>
-#include <glad/glad.h>
-#include <glad/glad_glx.h>
+#include <OGraphicsEngine.hpp>
+#include <glad.h>
+#include <glad_glx.h>
 #include <stdexcept>
 #include <assert.h>
-#include <OGL3D/Window/OWindow.h>
-#include <OGL3D/Graphics/X11/CX11Globals.h>
+#include <OWindow.hpp>
+#include <CX11Globals.h>
 
 Display* GlobalDisplay;
 int GlobalScreenId;

@@ -1,31 +1,11 @@
-#include <OGL3D/Window/OWindow.h>
+#include <OWindow.hpp>
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
-#include <glad/glad.h>
-#include <glad/glad_glx.h>
+#include <glad.h>
+#include <glad_glx.h>
 #include <assert.h>
 #include <stdexcept>
-#include "../Graphics/X11/CX11Globals.h"
-
-Atom atomWmDeleteWindow;
-
-
-void WndProc(OWindow* window, XEvent xev)
-{
-    if (xev.type == ClientMessage)
-    {
-        if (xev.xclient.data.l[0] == (long)atomWmDeleteWindow)
-        {
-            //Send Quit Message to MainLoop, Similar to PostQuitMessage(0)
-            XClientMessageEvent quitEvent = {};
-            quitEvent.type = ClientMessage;
-            quitEvent.window = GlobalWindowRoot;
-            quitEvent.format = 32;
-            XSendEvent(GlobalDisplay, GlobalWindowRoot, 0, 0, (XEvent*)&quitEvent);
-            XFlush(GlobalDisplay);
-        }
-    }
-}
+#include <CX11Globals.h>
 
 
 OWindow::OWindow()
@@ -91,15 +71,6 @@ OWindow::OWindow()
     XSetWMNormalHints(GlobalDisplay,window,&hints);
 }
 
-
-void X11CheckEvent(OWindow*window,void* event)
-{
-    XEvent xev =*(XEvent*)event;
-
-    //Check the event
-    if (xev.xclient.window == *(Window*)window)
-       WndProc(window,xev);
-}
 
 
 OWindow::~OWindow()

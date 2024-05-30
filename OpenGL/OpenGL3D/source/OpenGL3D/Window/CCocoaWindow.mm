@@ -22,7 +22,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
-#include <OGL3D/Window/OWindow.h>
+#include <OWindow.hpp>
 #import <Cocoa/Cocoa.h>
 #include <glad/glad.h>
 #include <assert.h>

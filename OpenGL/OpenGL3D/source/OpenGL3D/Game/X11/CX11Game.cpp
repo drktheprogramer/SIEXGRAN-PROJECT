@@ -22,12 +22,12 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
-#include <OGL3D/Game/OGame.h>
-#include <OGL3D/Window/OWindow.h>
-#include <OGL3D/Graphics/OGraphicsEngine.h>
+#include <OGame.hpp>
+#include <OWindow.hpp>
+#include <OGraphicsEngine.hpp>
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
-#include <OGL3D/Graphics/X11/CX11Globals.h>
+#include <CX11Globals.h>
 
 
 void OGame::run()

@@ -22,9 +22,9 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
-#include <OGL3D/Game/OGame.h>
-#include <OGL3D/Window/OWindow.h>
-#include <OGL3D/Graphics/OGraphicsEngine.h>
+#include <OGame.hpp>
+#include <OWindow.hpp>
+#include <OGraphicsEngine.hpp>
 #import <Cocoa/Cocoa.h>
 
 
