@@ -121,12 +121,12 @@ ALLCPPS :=$(shell find ./ -iname *.cpp -not -iname *Linux* -not -iname *X11* -no
 ALLCS :=$(shell find ./ -iname *.c -not -iname *Linux* -not -iname *X11* -not -iname *glx* -not -iname *Cocoa*)
 else
 ifeq ($(OS),Linux) #FOR LINUX SYSTEMS
-ALLCPPS :=$(shell find ./ -iname *.cpp -not -iname *Win* -not -iname *wgl* -not -iname *Cocoa*)
-ALLCS :=$(shell find ./ -iname *.c -not -iname *Win* -not -iname *wgl* -not -iname *Cocoa*)
+ALLCPPS :=$(shell find ./ -iname *.cpp -not -iname *Win32* -not -iname *wgl* -not -iname *Cocoa*)
+ALLCS :=$(shell find ./ -iname *.c -not -iname *Win32* -not -iname *wgl* -not -iname *Cocoa*)
 else
 ifeq ($(OS),Cocoa) #FOR MAC SYSTEMS
-ALLCPPS :=$(shell find ./ -iname *.cpp -not -iname *Linux* -not -iname *X11* -not -iname *wgl*)
-ALLCS :=$(shell find ./ -iname *.c -not -iname *Linux* -not -iname *X11* -not -iname *wgl*)
+ALLCPPS :=$(shell find ./ -iname *.cpp -not -iname *Linux* -not -iname *X11* -not -iname *wgl* -not -iname *Win32*)
+ALLCS :=$(shell find ./ -iname *.c -not -iname *Linux* -not -iname *X11* -not -iname *wgl* -not -iname *Win32*)
 else
 ALLCPPS :=$(shell find ./ -iname *.cpp -not -iname *Linux* -not -iname *X11* -not -iname *glx* -not -iname *Cocoa*)
 ALLCS :=$(shell find ./ -iname *.c -not -iname *Linux* -not -iname *X11* -not -iname *glx* -not -iname *Cocoa*)
