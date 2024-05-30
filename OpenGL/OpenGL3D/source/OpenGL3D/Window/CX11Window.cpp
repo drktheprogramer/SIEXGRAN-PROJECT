@@ -7,6 +7,25 @@
 #include <stdexcept>
 #include <CX11Globals.h>
 
+Atom atomWmDeleteWindow;
+
+void WndProc(OWindow* window, XEvent xev)
+{
+    if (xev.type == ClientMessage)
+    {
+        if (xev.xclient.data.l[0] == (long)atomWmDeleteWindow)
+        {
+            //Send Quit Message to MainLoop, Similar to PostQuitMessage(0)
+            XClientMessageEvent quitEvent = {};
+            quitEvent.type = ClientMessage;
+            quitEvent.window = GlobalWindowRoot;
+            quitEvent.format = 32;
+            XSendEvent(GlobalDisplay, GlobalWindowRoot, 0, 0, (XEvent*)&quitEvent);
+            XFlush(GlobalDisplay);
+        }
+    }
+}
+
 
 OWindow::OWindow()
 {
@@ -71,7 +90,14 @@ OWindow::OWindow()
     XSetWMNormalHints(GlobalDisplay,window,&hints);
 }
 
+void X11CheckEvent(OWindow*window,void* event)
+{
+    XEvent xev =*(XEvent*)event;
 
+    //Check the event
+    if (xev.xclient.window == *(Window*)window)
+       WndProc(window,xev);
+}
 
 OWindow::~OWindow()
 {
