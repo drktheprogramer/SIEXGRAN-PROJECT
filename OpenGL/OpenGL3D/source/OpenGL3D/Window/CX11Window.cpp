@@ -5,7 +5,7 @@
 #include <glad_glx.h>
 #include <assert.h>
 #include <stdexcept>
-#include <CX11Globals.h>
+#include "../Graphics/X11/CX11Globals.h"
 
 Atom atomWmDeleteWindow;
 
