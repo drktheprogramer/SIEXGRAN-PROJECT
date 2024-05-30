@@ -10,24 +10,6 @@
 Atom atomWmDeleteWindow;
 
 
-void WndProc(OWindow* window, XEvent xev)
-{
-    if (xev.type == ClientMessage)
-    {
-        if (xev.xclient.data.l[0] == (long)atomWmDeleteWindow)
-        {
-            //Send Quit Message to MainLoop, Similar to PostQuitMessage(0)
-            XClientMessageEvent quitEvent = {};
-            quitEvent.type = ClientMessage;
-            quitEvent.window = GlobalWindowRoot;
-            quitEvent.format = 32;
-            XSendEvent(GlobalDisplay, GlobalWindowRoot, 0, 0, (XEvent*)&quitEvent);
-            XFlush(GlobalDisplay);
-        }
-    }
-}
-
-
 OWindow::OWindow()
 {
     //Creating the Window with X11 API---------------------------
