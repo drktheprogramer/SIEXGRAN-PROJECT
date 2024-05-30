@@ -35,19 +35,8 @@ extern Window GlobalWindowRoot;
 extern Visual *GlobalVisual;
 extern Colormap GlobalColorMap;
 
-void WndProc(OWindow* window, XEvent xev);
-void X11CheckEvent(OWindow*window,void* event);
 
 Atom atomWmDeleteWindow;
-
-void X11CheckEvent(OWindow*window,void* event)
-{
-    XEvent xev =*(XEvent*)event;
-
-    //Check the event
-    if (xev.xclient.window == *(Window*)window)
-       WndProc(window,xev);
-}
 
 void WndProc(OWindow* window, XEvent xev)
 {
@@ -64,5 +53,16 @@ void WndProc(OWindow* window, XEvent xev)
             XFlush(GlobalDisplay);
         }
     }
+}
+
+
+
+void X11CheckEvent(OWindow*window,void* event)
+{
+    XEvent xev =*(XEvent*)event;
+
+    //Check the event
+    if (xev.xclient.window == *(Window*)window)
+       WndProc(window,xev);
 }
 
