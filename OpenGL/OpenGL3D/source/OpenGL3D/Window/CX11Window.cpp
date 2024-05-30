@@ -5,7 +5,7 @@
 #include <glad_glx.h>
 #include <assert.h>
 #include <stdexcept>
-#include "../Graphics/X11/CX11Globals.h"
+#include <CX11Globals.h>
 
 
 OWindow::OWindow()
