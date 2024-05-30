@@ -2,7 +2,7 @@
 #include<memory>
 #include<OGraphicsEngine.hpp>
 #include<OWindow.hpp>
-#include "../Graphics/X11/CX11Globals.h"
+
 
 
 OGame::OGame()
