@@ -7,7 +7,9 @@
 #include <stdexcept>
 #include "../Graphics/X11/CX11Globals.h"
 
+
 Atom atomWmDeleteWindow;
+
 
 void WndProc(OWindow* window, XEvent xev)
 {
@@ -42,7 +44,7 @@ OWindow::OWindow()
 
     m_handle = (void*)window;
     XMapWindow(GlobalDisplay, window);
-    XStoreName(GlobalDisplay, window, "PardCode - OpenGL 3D Game");
+    XStoreName(GlobalDisplay, window, "PardCode | OpenGL 3D Game");
 
     assert (window);
     //---------------------------------------------------------
@@ -84,11 +86,12 @@ OWindow::OWindow()
     //Set the Window not resizable
     XSizeHints hints={};
     hints.flags = PMinSize | PMaxSize;
-    hints.min_width = hints.max_width = 800;
-    hints.min_height = hints.max_height = 600;
+    hints.min_width = hints.max_width = 1024;
+    hints.min_height = hints.max_height = 768;
 
     XSetWMNormalHints(GlobalDisplay,window,&hints);
 }
+
 
 void X11CheckEvent(OWindow*window,void* event)
 {
@@ -99,12 +102,19 @@ void X11CheckEvent(OWindow*window,void* event)
        WndProc(window,xev);
 }
 
+
 OWindow::~OWindow()
 {
     glXDestroyContext(GlobalDisplay,(GLXContext)m_context);
     XDestroyWindow(GlobalDisplay,(Window)m_handle );
 }
 
+ORect OWindow::getInnerSize()
+{
+    XWindowAttributes gwa;
+    XGetWindowAttributes(GlobalDisplay, (Window)m_handle, &gwa);
+    return ORect(gwa.width, gwa.height);
+}
 
 void OWindow::makeCurrentContext()
 {
