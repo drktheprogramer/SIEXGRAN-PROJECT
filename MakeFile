@@ -169,7 +169,7 @@ LIBS := -lOpenGl32 -lGdi32
 else
 ifeq ($(OS),Linux) #FOR LINUX SYSTEMS
 LIBSPATH := -L"$(PWD)/Libs/Linux"
-LIBS := -lX11 -lGL -ldl
+LIBS := -lX11 -lGL -lXext -ldl
 else
 ifeq ($(OS),Cocoa) #FOR MAC SYSTEMS
 else #FOR MINGW64

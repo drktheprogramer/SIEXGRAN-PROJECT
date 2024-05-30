@@ -1,4 +1,5 @@
 #include<OGame.hpp>
+#include<memory>
 #include<OGraphicsEngine.hpp>
 #include<OWindow.hpp>
 
