@@ -27,7 +27,7 @@ SOFTWARE.*/
 #include <OGraphicsEngine.hpp>
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
-#include "../../Graphics/X11/CX11Globals.h"
+#include <CX11Globals.h>
 
 
 void OGame::run()
