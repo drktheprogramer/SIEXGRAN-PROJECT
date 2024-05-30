@@ -7,8 +7,6 @@
 #include <stdexcept>
 #include "../Graphics/X11/CX11Globals.h"
 
-Atom atomWmDeleteWindow;
-
 
 OWindow::OWindow()
 {
