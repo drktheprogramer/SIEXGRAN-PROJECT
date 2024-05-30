@@ -35,10 +35,5 @@ extern Window GlobalWindowRoot;
 extern Visual *GlobalVisual;
 extern Colormap GlobalColorMap;
 
-
-Atom atomWmDeleteWindow;
-
-extern void WndProc(OWindow* window, XEvent xev);
-
 extern void X11CheckEvent(OWindow*window,void* event);
 
