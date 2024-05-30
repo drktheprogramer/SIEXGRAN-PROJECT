@@ -168,7 +168,7 @@ LIBSPATH := -L"/c/Program Files (x86)/Windows Kits/10/Lib/10.0.19041.0/um/x64"
 LIBS := -lOpenGl32 -lGdi32
 else
 ifeq ($(OS),Linux) #FOR LINUX SYSTEMS
-LIBSPATH := -L"$(PWD)/Libs/Linux"
+LIBSPATH :=
 LIBS := -lX11 -lGL -lXext -ldl
 else
 ifeq ($(OS),Cocoa) #FOR MAC SYSTEMS
