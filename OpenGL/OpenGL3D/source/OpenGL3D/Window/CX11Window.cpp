@@ -5,7 +5,28 @@
 #include <glad_glx.h>
 #include <assert.h>
 #include <stdexcept>
-#include <CX11Globals.h>
+#include "../Graphics/X11/CX11Globals.h"
+
+
+Atom atomWmDeleteWindow;
+
+
+void WndProc(OWindow* window, XEvent xev)
+{
+    if (xev.type == ClientMessage)
+    {
+        if (xev.xclient.data.l[0] == (long)atomWmDeleteWindow)
+        {
+            //Send Quit Message to MainLoop, Similar to PostQuitMessage(0)
+            XClientMessageEvent quitEvent = {};
+            quitEvent.type = ClientMessage;
+            quitEvent.window = GlobalWindowRoot;
+            quitEvent.format = 32;
+            XSendEvent(GlobalDisplay, GlobalWindowRoot, 0, 0, (XEvent*)&quitEvent);
+            XFlush(GlobalDisplay);
+        }
+    }
+}
 
 
 OWindow::OWindow()
@@ -23,7 +44,7 @@ OWindow::OWindow()
 
     m_handle = (void*)window;
     XMapWindow(GlobalDisplay, window);
-    XStoreName(GlobalDisplay, window, "PardCode - OpenGL 3D Game");
+    XStoreName(GlobalDisplay, window, "PardCode | OpenGL 3D Game");
 
     assert (window);
     //---------------------------------------------------------
@@ -65,12 +86,21 @@ OWindow::OWindow()
     //Set the Window not resizable
     XSizeHints hints={};
     hints.flags = PMinSize | PMaxSize;
-    hints.min_width = hints.max_width = 800;
-    hints.min_height = hints.max_height = 600;
+    hints.min_width = hints.max_width = 1024;
+    hints.min_height = hints.max_height = 768;
 
     XSetWMNormalHints(GlobalDisplay,window,&hints);
 }
 
+
+void X11CheckEvent(OWindow*window,void* event)
+{
+    XEvent xev =*(XEvent*)event;
+
+    //Check the event
+    if (xev.xclient.window == *(Window*)window)
+       WndProc(window,xev);
+}
 
 
 OWindow::~OWindow()
@@ -79,6 +109,12 @@ OWindow::~OWindow()
     XDestroyWindow(GlobalDisplay,(Window)m_handle );
 }
 
+ORect OWindow::getInnerSize()
+{
+    XWindowAttributes gwa;
+    XGetWindowAttributes(GlobalDisplay, (Window)m_handle, &gwa);
+    return ORect(gwa.width, gwa.height);
+}
 
 void OWindow::makeCurrentContext()
 {

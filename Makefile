@@ -1,11 +1,11 @@
-#						  [MakeFile for Siexgran's Project]
-#--------------------------------------------------------------------------------------------#
+#														  				[MakeFile for Siexgran's Project]
+#---------------------------------------------------------------------------------------------------------------------#
 #	
 #
 #
 
-#						  		[OS VARIABLE STORE]
-#--------------------------------------------------------------------------------------------#
+#																			  		[OS VARIABLE STORE]
+#---------------------------------------------------------------------------------------------------------------------#
 #
 #	>>	Makefile's automatic readjust the output binary by OS variable
 OS :=$(shell uname)
@@ -15,8 +15,8 @@ OS :=$(shell uname)
 
 
 MSG := echo Builded succesfuly!
-#			  						[HEADERS PATHS]
-#--------------------------------------------------------------------------------------------#
+#			  																				[HEADERS PATHS]
+#---------------------------------------------------------------------------------------------------------------------#
 #	
 #	>>	MAIN PROJECT HEADERS
 # 
@@ -42,8 +42,8 @@ siexgran engine/utils/slotmap.hpp \
 siexgran engine/utils/typetraits.hpp 
 PWD :=$(shell pwd)
 
-#									[CONFIGURATION]
-#--------------------------------------------------------------------------------------------#
+#																								[CONFIGURATION]
+#---------------------------------------------------------------------------------------------------------------------#
 #
 #	>>	OUTPUT FILE
 APP := game
@@ -74,8 +74,9 @@ endif
 
 
 
-
-# ---------------- | ------------- | --- | [VERSION] | --- | ------------- | --------------- # 
+#---------------------------------------------------------------------------------------------------------------------#
+# ---------------------- | ------------------- | --- | [VERSION] | --- | ------------------- | ---------------------- #
+#---------------------------------------------------------------------------------------------------------------------#
 ifdef RELEASE 	#	>>	RELEASE VERSION
 NAMEAPP +=$(addsuffix _v $(RELEASE),$(APP))
 VERSION := Release
@@ -97,8 +98,8 @@ endif
 endif  
 
 
-#										[PREFIX]
-#--------------------------------------------------------------------------------------------#
+#																												[PREFIX]
+#---------------------------------------------------------------------------------------------------------------------#
 #
 BIN := ./.BIN
 SRC := ./src
@@ -113,28 +114,28 @@ endif
 
 
 
-#		  						  [ALL CPP AND C FILES]
-#--------------------------------------------------------------------------------------------#
+#		  					 	  														[ALL CPP AND C FILES]
+#---------------------------------------------------------------------------------------------------------------------#
 #
 ifeq ($(OS),Windows_NT) #FOR WINDOWS SYSTEMS
 ALLCPPS :=$(shell find ./ -iname *.cpp -not -iname *Linux* -not -iname *X11* -not -iname *glx* -not -iname *Cocoa*)
 ALLCS :=$(shell find ./ -iname *.c -not -iname *Linux* -not -iname *X11* -not -iname *glx* -not -iname *Cocoa*)
 else
 ifeq ($(OS),Linux) #FOR LINUX SYSTEMS
-ALLCPPS :=$(shell find ./ -iname *.cpp -not -iname *Win* -not -iname *wgl* -not -iname *Cocoa*)
-ALLCS :=$(shell find ./ -iname *.c -not -iname *Win* -not -iname *wgl* -not -iname *Cocoa*)
+ALLCPPS :=$(shell find ./ -iname *.cpp -not -iname *Win32* -not -iname *wgl* -not -iname *Cocoa*)
+ALLCS :=$(shell find ./ -iname *.c -not -iname *Win32* -not -iname *wgl* -not -iname *Cocoa*)
 else
 ifeq ($(OS),Cocoa) #FOR MAC SYSTEMS
-ALLCPPS :=$(shell find ./ -iname *.cpp -not -iname *Linux* -not -iname *X11* -not -iname *wgl*)
-ALLCS :=$(shell find ./ -iname *.c -not -iname *Linux* -not -iname *X11* -not -iname *wgl*)
+ALLCPPS :=$(shell find ./ -iname *.cpp -not -iname *Linux* -not -iname *X11* -not -iname *wgl* -not -iname *Win32*)
+ALLCS :=$(shell find ./ -iname *.c -not -iname *Linux* -not -iname *X11* -not -iname *wgl* -not -iname *Win32*)
 else
 ALLCPPS :=$(shell find ./ -iname *.cpp -not -iname *Linux* -not -iname *X11* -not -iname *glx* -not -iname *Cocoa*)
 ALLCS :=$(shell find ./ -iname *.c -not -iname *Linux* -not -iname *X11* -not -iname *glx* -not -iname *Cocoa*)
 endif
 endif
 endif 
-#	  						 [PATHS FOR EVERY CPP OR C OBJ]
-#--------------------------------------------------------------------------------------------#
+#	  						 														[PATHS FOR EVERY CPP OR C OBJ]
+#---------------------------------------------------------------------------------------------------------------------#
 #	
 #								>	SETPATHS MACRO	<
 #	$(1): New patht
@@ -158,10 +159,9 @@ DIRCOBJS :=$(sort $(dir $(PATHCOBJS)))
 #	>>	OUTPUT'S EXECUTABLE DIRECTORY
 COMPILE :=$(EXEDIR)$(NAMEAPP)$(EXTENSION)
 
-#	    					 [LIBS AND PATHS FOR THE PROJECT]
-#--------------------------------------------------------------------------------------------#
+#	    					 													 [LIBS AND PATHS FOR THE PROJECT]
+#---------------------------------------------------------------------------------------------------------------------#
 #
-
 ifeq ($(OS),Windows_NT) #FOR WINDOWS SYSTEMS
 #LIBSPATH := -L"$(PWD)/Libs/Win32"
 LIBSPATH := -L"/c/Program Files (x86)/Windows Kits/10/Lib/10.0.19041.0/um/x64"
@@ -178,9 +178,8 @@ LIBS := -lOpenGl32 -lGdi32
 endif
 endif
 endif
-#	    						[VAR-FUNCTIONS TO COMPILE]
-#--------------------------------------------------------------------------------------------#
-#
+#	  														  						[VAR-FUNCTIONS TO COMPILE]
+#---------------------------------------------------------------------------------------------------------------------#
 #
 #	>	MAKEOBJS MACRO	<
 #	$(1): Compiler 
@@ -201,14 +200,19 @@ $(2): $(3) $(4)
 endef 
 #
 
-#										 [RULES]
-#--------------------------------------------------------------------------------------------#
+#										 																		[RULES]
+#---------------------------------------------------------------------------------------------------------------------#
 #
+
 #	>>	PHONY RULES
-.PHONY: show_info clear
+.PHONY: show_info clear $(APP)
 #
+#	>>	DEFINING DEFAULT RULE
+.DEFAULT_GOAL := all
+
 #	>>	MAIN RULE
-$(APP): $(DIRCPPOBJS) $(DIRCOBJS) $(EXEDIR) $(COMPILE)
+#
+all: $(DIRCPPOBJS) $(DIRCOBJS) $(EXEDIR) $(COMPILE)
 #
 #	>>	EXECUTABLE RULE
 $(COMPILE): $(PATHCPPOBJS) $(PATHCOBJS)
@@ -217,14 +221,14 @@ $(COMPILE): $(PATHCPPOBJS) $(PATHCOBJS)
 	$(MSG)
 #
 #	>>	REMAKE RULE
-rebuild: clean $(APP)
+rebuild: clean all
 #
 #	>>	CLEAN RULE
 clean:
 	rm -r $(BIN)
 	
 
-# -------------------------------------- > HELPERS < -------------------------------------- #
+# ----------------------------------------------- > HELPERS < ------------------------------------------------------- #
 #
 #	>>	CPP HELPER RULE
 $(DIRCPPOBJS): $(ALLCPPS)

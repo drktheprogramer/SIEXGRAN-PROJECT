@@ -20,14 +20,15 @@ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.*/
+SOFTWARE.
+*/
 
 #pragma once
 
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
 
-class OWindow;
+struct OWindow;
 
 extern Display* GlobalDisplay;
 extern int GlobalScreenId;
@@ -35,34 +36,5 @@ extern Window GlobalWindowRoot;
 extern Visual *GlobalVisual;
 extern Colormap GlobalColorMap;
 
-
-Atom atomWmDeleteWindow;
-
-void WndProc(OWindow* window, XEvent xev)
-{
-    if (xev.type == ClientMessage)
-    {
-        if (xev.xclient.data.l[0] == (long)atomWmDeleteWindow)
-        {
-            //Send Quit Message to MainLoop, Similar to PostQuitMessage(0)
-            XClientMessageEvent quitEvent = {};
-            quitEvent.type = ClientMessage;
-            quitEvent.window = GlobalWindowRoot;
-            quitEvent.format = 32;
-            XSendEvent(GlobalDisplay, GlobalWindowRoot, 0, 0, (XEvent*)&quitEvent);
-            XFlush(GlobalDisplay);
-        }
-    }
-}
-
-
-
-void X11CheckEvent(OWindow*window,void* event)
-{
-    XEvent xev =*(XEvent*)event;
-
-    //Check the event
-    if (xev.xclient.window == *(Window*)window)
-       WndProc(window,xev);
-}
+extern void X11CheckEvent(OWindow*window,void* event);
 
