@@ -24,6 +24,8 @@ template<typename CMP>
 		/// @tparam CMP = Component Type 
 		/// @param key = key object from slotmap
 		template<typename CMP>
+//maybe a future issue, to_keytype key must be
+//to_keytype<CMP>
 		void addComponent(to_keytype key) {
 			cmp_mask  |= cmp_storage_type::cmpinfo::template getMask<CMP>();
 			std::get<typename to_keytype<CMP>>(cmp_keys) = key;
